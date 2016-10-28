@@ -1,0 +1,4 @@
+User-agent: *
+Crawl-delay: 10
+Host: {{ ROOT_DOMAIN }}
+Sitemap: {{ ROOT_URL }}{% url sitemap %}

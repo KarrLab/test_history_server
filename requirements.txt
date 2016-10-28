@@ -1,0 +1,5 @@
+Django
+git+https://github.com/KarrLab/junit2html.git#egg=junit2html >=4
+MySQL-python
+nose2unith
+unitth

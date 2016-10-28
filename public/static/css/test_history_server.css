@@ -1,0 +1,15 @@
+#repositories{
+    width:100%;
+}
+#repositories thead th {
+    background:#d9d9d9;
+}
+#repositories thead th,
+#repositories tbody td {
+    padding-left:2px;
+    padding-right:2px;
+}
+
+#repositories tbody td.alert {
+    color:red
+}

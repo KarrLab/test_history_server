@@ -1,0 +1,10 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- index -->
+    <url><loc>{{ ROOT_URL }}{% url index %}</loc></url>
+
+    <!-- research -->
+    {% load static %}
+    {% for repo in repositories %}
+    <url><loc>{% get_static_prefix %}/repo/{{ repo.owner }}/{{ repo.name }}/html/index.html</loc></url>
+    {% endfor %}
+</urlset>

@@ -1,0 +1,9 @@
+# compiled files
+*.pyc
+
+# log
+test_history_server/log/
+
+# test reports
+public/static/repo/
+
