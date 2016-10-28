@@ -4,6 +4,10 @@
 # log
 test_history_server/log/
 
+# documentation
+docs/_build/
+docs/source/
+
 # test reports
 public/static/repo/
 

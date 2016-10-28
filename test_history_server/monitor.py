@@ -96,7 +96,8 @@ def _exiting():
 		_queue.put(True)
 	except:
 		pass
-	_thread.join()
+	if _thread.is_alive():
+		_thread.join()
 
 atexit.register(_exiting)
 
@@ -117,4 +118,3 @@ def start(interval=1.0):
 		_running = True
 		_thread.start()
 		_lock.release()
-

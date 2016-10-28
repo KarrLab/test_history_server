@@ -20,8 +20,9 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 import test_history_server
-from django.conf import settings
-settings.configure()
+from test_history_server import settings
+from django.core.management import setup_environ
+setup_environ(settings)
 
 # -- General configuration ------------------------------------------------
 
