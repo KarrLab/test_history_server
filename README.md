@@ -5,7 +5,7 @@ Unit test history report server
 1. Create a database
 2. Install package
   ```
-  pip install git+git://github.com/KarrLab/test_history_server
+  pip install -e git+https://github.com/KarrLab/test_history_server -t /path/to/web-server/test_history_server
   ```
 3. Edit site and database configuration in `test_history_server/settings.py`
 4. Setup database

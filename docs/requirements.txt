@@ -1,0 +1,8 @@
+Django
+git+https://github.com/KarrLab/junit2html.git#egg=junit2html >=4
+MySQL-python
+nose2unith
+robpol86-sphinxcontrib-googleanalytics
+Sphinx
+sphinx_rtd_theme
+unitth
