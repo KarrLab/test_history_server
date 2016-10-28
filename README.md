@@ -1,3 +1,10 @@
+<!--[![PyPI package](https://img.shields.io/pypi/v/test_history_server.svg)](https://pypi.python.org/pypi/test_history_server)-->
+[![Documentation](https://readthedocs.org/projects/test_history_server/badge/?version=latest)](http://test_history_server.readthedocs.org)
+<!--[![Test results](https://circleci.com/gh/KarrLab/test_history_server.svg?style=shield)](https://circleci.com/gh/KarrLab/test_history_server)-->
+<!--[![Test coverage](https://coveralls.io/repos/github/KarrLab/test_history_server/badge.svg)](https://coveralls.io/github/KarrLab/test_history_server)-->
+[![Code analysis](https://codeclimate.com/github/KarrLab/test_history_server/badges/gpa.svg)](https://codeclimate.com/github/KarrLab/test_history_server)
+[![License](https://img.shields.io/github/license/KarrLab/test_history_server.svg)](LICENSE)
+
 # test_history_server
 Unit test history report server
 
