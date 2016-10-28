@@ -7,6 +7,8 @@ STATUS_CHOICES = (
 
 
 class Repository(Model):
+    ''' Represents a repository '''
+
     name = CharField(max_length=255, verbose_name='Name')
     owner = CharField(max_length=255, verbose_name='Owner')
 
@@ -18,6 +20,8 @@ class Repository(Model):
 
 
 class Report(Model):
+    ''' Represents a test report '''
+
     name = CharField(max_length=255, blank=True, default='', verbose_name='Name')
     repository = ForeignKey('Repository', related_name='reports', verbose_name='Repository')
     repository_branch = CharField(max_length=255, verbose_name='Repository branch')

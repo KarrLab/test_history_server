@@ -17,6 +17,14 @@ import os
 ### pages
 ###################
 def index(request):
+    ''' Returns HTML for home page
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
+    '''
     return render_template('index.html', request,
         data = {
             'repositories': Repository.objects.all()
@@ -25,6 +33,25 @@ def index(request):
 
 @csrf_exempt
 def submit_report(request):
+    ''' Save test report and returns result in JSON
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP POST request with these arguments
+            * `token` (string): secret token used to authenticate with server
+            * `repo_owner` (string): user or organization which owns the GitHub repository
+            * `repo_name` (string): the name of the GitHub repository
+            * `repo_branch` (string):  the name of the branch of the repository that was tested
+            * `repo_revision` (string): the SHA1 key of the revision that was tested
+            * `build_num` (integer): the build number that was tested
+            * `report_name` (string, optional): textual label for individual reports within build, such as to indicate results from different versions of Python
+            * `report` (file): JUnit-style XML test report
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with result in JSON format
+            * status (:obj:`bool`): indicates success/failure
+            * message (:obj:`str`): summary of results
+            * details (:obj:`dict`): dictionary of form validation errors
+    '''
     if not request.method == 'POST':
         return json_response(False, 'Invalid method: {}. Only POST is allowed.'.format(request.method))
 
@@ -120,6 +147,14 @@ def json_response(success, message, details=None):
 ### sitemap
 ###################
 def sitemap(request):
+    ''' Returns site map in XML
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with XML site map
+    '''
     return render_template('sitemap.xml', request,
         data = {
             'ROOT_URL': settings.ROOT_URL,
@@ -128,6 +163,14 @@ def sitemap(request):
         mimetype='application/xml')
 
 def robots(request):
+    ''' Returns robots.txt file
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with robots.txt file
+    '''
     return render_template('robots.txt', request,
         data = {
             'ROOT_DOMAIN': settings.ROOT_DOMAIN,
@@ -139,6 +182,18 @@ def robots(request):
 ### helper functions
 ###################
 def render_template(templateFile, request, data = {}, mimetype = 'text/html'):
+    ''' Returns rendered template
+
+    Args:
+        templateFile (:obj:`str`): path to template to render_template
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+        data (:obj:`dict`, optional): dictionary of data needed to render template
+        mimetype (:obj:`str`, optional): mime type
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with XML site map
+    '''
+
     #add data
     data['request'] = request
     data['last_updated_date'] = datetime.fromtimestamp(os.path.getmtime(os.path.join(settings.TEMPLATE_DIRS[0], templateFile)))

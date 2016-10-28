@@ -2,6 +2,7 @@ from django import forms
 
 
 class SubmitReportForm(forms.Form):
+    ''' Form for uploading test report '''
     token = forms.CharField(
         required=True,
         widget=forms.TextInput,
