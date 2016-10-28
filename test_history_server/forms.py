@@ -39,7 +39,7 @@ class SubmitReportForm(forms.Form):
         help_text='Enter the build number'
     )
     report_name = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.TextInput,
         label='Report name',
         help_text='Enter the report name (e.g. Python version)'

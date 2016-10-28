@@ -18,7 +18,7 @@ class Repository(Model):
 
 
 class Report(Model):
-    name = CharField(max_length=255, verbose_name='Name')
+    name = CharField(max_length=255, blank=True, default='', verbose_name='Name')
     repository = ForeignKey('Repository', related_name='reports', verbose_name='Repository')
     repository_branch = CharField(max_length=255, verbose_name='Repository branch')
     repository_revision = CharField(max_length=255, verbose_name='Repository revision')
