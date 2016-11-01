@@ -1,3 +1,12 @@
+"""
+Installation script
+
+:Author: Jonathan Karr <karr@mssm.edu>
+:Date: 2016-11-01
+:Copyright: 2016, Karr Lab
+:License: MIT
+"""
+
 from setuptools import setup, find_packages
 import test_history_server
 import os
@@ -22,7 +31,7 @@ setup(
     name="test_history_server",
     version=test_history_server.__version__,
     description="Unit test history server",
-    url="https://github.com/KarrLab/test_history_server",
+    url="http://tests.karrlab.org",
     download_url='https://github.com/KarrLab/test_history_server/tarball/{}'.format(test_history_server.__version__),
     author="Jonathan Karr",
     author_email="jonrkarr@gmail.com",

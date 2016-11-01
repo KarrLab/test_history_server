@@ -1,3 +1,10 @@
+""" HTML GUI views
+:Author: Jonathan Karr <karr@mssm.edu>
+:Date: 2016-11-01
+:Copyright: 2016, Karr Lab
+:License: MIT
+"""
+
 from collections import OrderedDict
 from datetime import datetime
 from django.db.models import Count, Sum
@@ -12,7 +19,7 @@ import os
 ### pages
 ###################
 def index(request):
-    ''' Returns HTML for home page
+    ''' Returns HTML for home page which displays a list of repositories
 
     Args:
         request (:obj:`django.http.request.HttpRequest`): HTTP request
@@ -41,6 +48,17 @@ def index(request):
         )
 
 def repo(request, owner, repo):
+    ''' Returns HTML for repository page which displays tables of builds/reports
+    and test classes.
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+        owner (:obj:`str`): name of repository owner
+        repo (:obj:`str`): name of repository
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
+    '''
     repo = Repository.objects.get(owner=owner, name=repo)
 
     # reports
@@ -95,6 +113,19 @@ def repo(request, owner, repo):
         )
 
 def classname(request, owner, repo, classname):
+    ''' Returns HTML for test class page which displays a list of builds/reports
+    which includes the test class and the test cases within the class.
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+        owner (:obj:`str`): name of repository owner
+        repo (:obj:`str`): name of repository
+        classname (:obj:`str`): name of test class
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
+    '''
+
     repo = Repository.objects.get(owner=owner, name=repo)
 
     # reports
@@ -164,6 +195,20 @@ def classname(request, owner, repo, classname):
         )
 
 def case(request, owner, repo, classname, case):
+    ''' Returns HTML for test case page which displays a list of builds/reports
+    which include the test case.
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+        owner (:obj:`str`): name of repository owner
+        repo (:obj:`str`): name of repository
+        classname (:obj:`str`): name of test class
+        case (:obj:`str`): name of test case
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
+    '''
+
     repo = Repository.objects.get(owner=owner, name=repo)
 
     cases = TestCase.objects\
@@ -183,6 +228,19 @@ def case(request, owner, repo, classname, case):
         )
 
 def build(request, owner, repo, build):
+    ''' Returns HTML for build page which displays a list of reports which
+    includes build and the test classes included in the build.
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+        owner (:obj:`str`): name of repository owner
+        repo (:obj:`str`): name of repository
+        build (:obj:`int`): number of build
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
+    '''
+
     repo = Repository.objects.get(owner=owner, name=repo)
 
     reports = []
@@ -267,6 +325,20 @@ def build(request, owner, repo, build):
 
 
 def report(request, owner, repo, build, report):
+    ''' Returns HTML for report page which displays a list of test classes
+    included in the report.
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+        owner (:obj:`str`): name of repository owner
+        repo (:obj:`str`): name of repository
+        build (:obj:`int`): number of build
+        report (:obj:`name`): name of the report
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
+    '''
+
     repo = Repository.objects.get(owner=owner, name=repo)
     report = repo.reports.get(build_number=build, name=report)
     cases = report.test_suite.test_cases.order_by('name')

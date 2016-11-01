@@ -1,3 +1,10 @@
+""" REST API views
+:Author: Jonathan Karr <karr@mssm.edu>
+:Date: 2016-11-01
+:Copyright: 2016, Karr Lab
+:License: MIT
+"""
+
 from datetime import datetime
 from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
@@ -138,6 +145,18 @@ def submit_report(request):
     return json_response(True, 'Test report successfully uploaded')
 
 def json_response(success, message, details=None):
+    ''' Create and return JSON response
+    Args:
+        success (:obj:`bool`): indicates success/failure
+        message (:obj:`str`): summary of results
+        details (:obj:`dict`): dictionary of form validation errors
+
+    Returns:
+        :obj:`django.http.JsonResponse`: HTTP response in JSON format with
+            * status (:obj:`bool`): indicates success/failure
+            * message (:obj:`str`): summary of results
+            * details (:obj:`dict`): dictionary of form validation errors
+    '''
     return JsonResponse({
         'success': success,
         'message': message,

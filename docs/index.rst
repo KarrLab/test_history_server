@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
 
    source/test_history_server.rst
-
+   source/modules.rst
 
 
 Indices and tables
