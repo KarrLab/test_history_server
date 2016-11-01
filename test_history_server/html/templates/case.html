@@ -11,6 +11,49 @@
 {% endblock %}
 
 {% block content %}
+<h4>Statistics</h4>
+<ul>
+  <li>Builds: {{statistics.builds}}</li>
+  <li>Reports: {{statistics.reports}}</li>
+  <li>Last tested: #{{statistics.last_report_build}} ({{statistics.last_report_date|date:"Y-m-d H:i:s"}})</li>
+  <li>Most recent pass: {% if not statistics.last_pass_build is None %}#{{statistics.last_pass_build}} ({{statistics.last_pass_date|date:"Y-m-d H:i:s"}}){% else %}N/A{% endif %}</li>
+  <li>Most recent failure: {% if not statistics.last_failure_build is None %}#{{statistics.last_failure_build}} ({{statistics.last_failure_date|date:"Y-m-d H:i:s"}}){% else %}N/A{% endif %}</li>
+</ul>
+
+<h4>Trends</h4>
+<ul class="small-block-grid-2">
+    <li><div id="time" class="figure"></div></li>
+</ul>
+
+<script type="text/javascript">
+	$(function() {
+    var times = [];
+    {% for time in trends.time %}
+    times.push([{{ forloop.counter0 }}, {{ time }}]);
+    {% endfor %}
+		$.plot("#time", [times], {
+      axisLabels: {
+        show: true,
+      },
+      xaxes: [{
+        axisLabel: 'Report',
+      }],
+      yaxes: [{
+        axisLabel: 'Time (s)',
+      }],
+      xaxis: {
+        min: 0,
+        max: {{trends.time|length|add:-1}},
+        ticks: [],
+      },
+      yaxis: {
+        min: 0,
+      },
+    });
+	});
+</script>
+
+<h4>Reports</h4>
 <table cellpadding=0 cellspacing=0>
   <thead>
     <tr>

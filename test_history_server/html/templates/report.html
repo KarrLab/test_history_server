@@ -4,13 +4,30 @@
 {% block page_title %}
 <a href="{% url 'owner' owner=repo.owner %}">{{repo.owner}}</a>
  / <a href="{% url 'repo' owner=repo.owner repo=repo.name %}">{{repo.name}}</a>
- / <a href="{% url 'build' owner=repo.owner repo=repo.name build=report.build_number %}">{{report.build_number}}</a>
+ / <a href="{% url 'build' owner=repo.owner repo=repo.name build=report.build_number %}">#{{report.build_number}}</a>
  / <a href="{% url 'report' owner=repo.owner repo=repo.name build=report.build_number report=report.name %}">{{report.name}}</a>
 {% endblock %}
 
 {% load static %}
 
 {% block content %}
+<h4>Info</h4>
+<ul>
+  <li>Branch: <a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_branch}}">{{report.repository_branch}}</a></li>
+  <li>Revision: <a href="https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{report.repository_revision}}">{{report.repository_revision}}</a></li>
+  <li>Build: <a href="https://circleci.com/gh/{{repo.owner}}/{{repo.name}}/{{report.build_number}}">{{report.build_number}}</a></li>
+  <li>Date: {{report.date|date:"Y-m-d H:i:s"}}</li>
+</ul>
+
+<h4>Statistics</h4>
+<ul>
+  <li>Test classes: {{statistics.classes}}</li>
+  <li>Test cases: {{statistics.cases}}</li>
+  <li>Pass rate (%): {{statistics.pass_rate|floatformat:1}}</li>
+  <li>Time (s): {{statistics.time|floatformat:2}}</li>
+</ul>
+
+<h4>Test cases</h4>
 <table cellpadding=0 cellspacing=0>
   <thead>
     <tr>

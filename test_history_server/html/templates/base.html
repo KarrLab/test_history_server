@@ -28,6 +28,10 @@ Created: 2015-04-28
         <link rel="stylesheet" href="{% get_static_prefix %}css/extras.css" />
         <link rel="stylesheet" href="{% get_static_prefix %}css/test_history_server.css" />
         <script src="{% get_static_prefix %}js/vendor/modernizr.js"></script>
+        <script src="{% get_static_prefix %}js/vendor/jquery.js"></script>
+        <script src="{% get_static_prefix %}js/foundation.min.js"></script>
+        <script src="{% get_static_prefix %}js/flot-0.8.3/jquery.flot.min.js"></script>
+        <script src="{% get_static_prefix %}js/jquery.flot.axislabels.js"></script>
 
         <link rel="icon" type="image/x-icon" href="{% get_static_prefix %}img/logo-mssm-16x16.ico" />
     </head>
@@ -120,8 +124,6 @@ Created: 2015-04-28
             </div>
         </div>
 
-        <script src="{% get_static_prefix %}js/vendor/jquery.js"></script>
-        <script src="{% get_static_prefix %}js/foundation.min.js"></script>
         <script>
         $(document).foundation();
         </script>

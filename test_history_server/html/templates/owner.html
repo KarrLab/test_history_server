@@ -5,12 +5,29 @@
 {% block page_title %}<a href="{% url 'owner' owner=owner %}">{{owner}}</a> repositories{% endblock %}
 
 {% block content %}
+<h4>Info</h4>
+<ul>
+  <li>Version control system: GitHub</li>
+  <li>Web page: <a href="https://github.com/{{owner}}">https://github.com/{{owner}}</a></li>
+</ul>
+
+<h4>Statistics</h4>
+<ul>
+  <li>Repositories: {{repositories|length}}</li>
+  <li>Builds: {{statistics.builds}}</li>
+  <li>Reports: {{statistics.reports}}</li>
+  <li>Test classes: {{statistics.classes}}</li>
+  <li>Test cases: {{statistics.cases}}</li>
+  <li>Last tested: {{statistics.last_report|date:"Y-m-d H:i:s"}}</li>
+</ul>
+
+<h4>Repositories</h4>
 <table cellpadding=0 cellspacing=0 id="index">
   <thead>
     <tr>
       <th>Name</th>
       <th>Repository</th>
-      <th>Test results</th>
+      <th>Builds and test cases</th>
       <th>Status</th>
       <th>Last tested</th>
     </tr>
@@ -19,10 +36,10 @@
   {% for repo in repositories %}
     <tr>
       <td>{{ repo.name }}</td>
-      <td><a href="https://github.com/{{ repo.owner }}/{{ repo.name }}">GitHub</a></td>
-      <td><a href="{% url 'repo' owner=repo.owner repo=repo.name %}">Results</a></td>
+      <td><a href="https://github.com/{{ repo.owner }}/{{ repo.name }}">Repository</a></td>
+      <td><a href="{% url 'repo' owner=repo.owner repo=repo.name %}">Builds and test cases</a></td>
       <td><a href="{% url 'report' owner=repo.owner repo=repo.name build=repo.build_number report=repo.report_name %}"{% if not repo.status_is_pass %} class="alert"{% endif %}>{% if repo.status_is_pass %}Pass{% else %}Failure{% endif %}</a></td>
-      <td>{{ repo.report_date }}</td>
+      <td>{{ repo.report_date|date:"Y-m-d H:i:s" }}</td>
     </tr>
   {% endfor %}
   </tbody>

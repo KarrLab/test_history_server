@@ -5,11 +5,23 @@
 {% block page_title %}Test reports{% endblock %}
 
 {% block content %}
+<h4>Statistics</h4>
+<ul>
+  <li>Users/organizations: {{owners|length}}</li>
+  <li>Repositories: {{statistics.repositories}}</li>
+  <li>Builds: {{statistics.builds}}</li>
+  <li>Reports: {{statistics.reports}}</li>
+  <li>Test classes: {{statistics.classes}}</li>
+  <li>Test cases: {{statistics.cases}}</li>
+  <li>Last tested: {{statistics.last_report|date:"Y-m-d H:i:s"}}</li>
+</ul>
+
+<h4>Users/organizations</h4>
 <table cellpadding=0 cellspacing=0 id="index">
   <thead>
     <tr>
-      <th>Owner</th>
-      <th>GitHub</th>
+      <th>User/organization</th>
+      <th>Version control system</th>
       <th>Repositories</th>
     </tr>
   </thead>

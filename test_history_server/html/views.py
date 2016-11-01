@@ -7,7 +7,7 @@
 
 from collections import OrderedDict
 from datetime import datetime
-from django.db.models import Count, Sum
+from django.db.models import Avg, Count, Max, Sum, Q
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext
@@ -32,9 +32,20 @@ def index(request):
         .values('owner')\
         .annotate(repositories=Count('name', distinct=True))
 
+    repos = Repository.objects.all()
+    statistics = {
+        'repositories': repos.count(),
+        'builds': repos.aggregate(builds=Count('reports__build_number', distinct=True))['builds'],
+        'reports': repos.aggregate(reports=Count('reports'))['reports'],
+        'classes': repos.values('name', 'reports__test_suite__test_cases__classname').distinct().count(),
+        'cases': repos.values('name', 'reports__test_suite__test_cases__classname', 'reports__test_suite__test_cases__name').distinct().count(),
+        'last_report': repos.aggregate(date=Max('reports__date'))['date'],
+        }
+
     return render_template(request, 'index.html',
         context={
-            'owners': owners
+            'owners': owners,
+            'statistics': statistics,
             }
         )
 
@@ -48,6 +59,15 @@ def owner(request, owner):
     Returns:
         :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
     '''
+    repos = Repository.objects.filter(owner=owner)
+    statistics = {
+        'builds': repos.aggregate(builds=Count('reports__build_number', distinct=True))['builds'],
+        'reports': repos.aggregate(reports=Count('reports'))['reports'],
+        'classes': repos.values('name', 'reports__test_suite__test_cases__classname').distinct().count(),
+        'cases': repos.values('name', 'reports__test_suite__test_cases__classname', 'reports__test_suite__test_cases__name').distinct().count(),
+        'last_report': repos.aggregate(date=Max('reports__date'))['date'],
+        }
+
     repositories = []
     for repo in Repository.objects.filter(owner=owner):
         report = repo.reports.order_by('-date')[0]
@@ -65,6 +85,7 @@ def owner(request, owner):
     return render_template(request, 'owner.html',
         context={
             'owner': owner,
+            'statistics': statistics,
             'repositories': repositories
             }
         )
@@ -82,6 +103,73 @@ def repo(request, owner, repo):
         :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
     '''
     repo = Repository.objects.get(owner=owner, name=repo)
+
+    #statistics
+    reports = repo.reports
+    last_report = reports.order_by('-build_number')[0]
+
+    passes = reports.exclude(Q(test_suite__test_cases__result='failure') | Q(test_suite__test_cases__result='error')).order_by('-build_number')
+    if passes.count() > 0:
+        last_pass = passes[0]
+        last_pass_build = last_pass.build_number
+        last_pass_date = last_pass.date
+    else:
+        last_pass_build = None
+        last_pass_date = None
+
+    fails = reports.filter(Q(test_suite__test_cases__result='failure') | Q(test_suite__test_cases__result='error')).order_by('-build_number')
+    if fails.count() > 0:
+        last_fail = fails[0]
+        last_fail_build = last_fail.build_number
+        last_fail_date = last_fail.date
+    else:
+        last_fail_build = None
+        last_fail_date = None
+
+    statistics = {
+        'builds': reports.aggregate(builds=Count('build_number', distinct=True))['builds'],
+        'reports': reports.count(),
+        'classes': reports.values('test_suite__test_cases__classname').distinct().count(),
+        'cases': reports.values('test_suite__test_cases__classname', 'test_suite__test_cases__name').distinct().count(),
+        'last_report_build': last_report.build_number,
+        'last_report_date': last_report.date,
+        'last_pass_build': last_pass_build,
+        'last_pass_date': last_pass_date,
+        'last_fail_build': last_fail_build,
+        'last_fail_date': last_fail_date,
+        }
+
+    #trends
+    reports = repo.reports\
+        .order_by('build_number', '-name')\
+        .annotate(
+            time=Sum('test_suite__test_cases__time'),
+            classes=Count('test_suite__test_cases__classname', distinct=True),
+            cases=Count('test_suite__test_cases'),
+            )
+
+    trends = {
+        'report': [],
+        'pass_rate': [],
+        'time': [],
+        'classes': [],
+        'cases': [],
+    }
+    for report in reports:
+        passes = report.test_suite.test_cases.filter(result='pass').count()
+        failures = report.test_suite.test_cases.filter(result='failure').count()
+        errors = report.test_suite.test_cases.filter(result='error').count()
+
+        if passes + failures + errors > 0:
+            pass_rate = passes / (passes + failures + errors) * 100.
+        else:
+            pass_rate = float('nan')
+
+        trends['report'].append({'build_number': report.build_number, 'name': report.name})
+        trends['pass_rate'].append(pass_rate)
+        trends['time'].append(report.time)
+        trends['classes'].append(report.classes)
+        trends['cases'].append(report.cases)
 
     # reports
     reports = []
@@ -129,6 +217,8 @@ def repo(request, owner, repo):
     return render_template(request, 'repo.html',
         context={
             'repo': repo,
+            'statistics': statistics,
+            'trends': trends,
             'reports': reports,
             'modules': modules,
             }
@@ -149,6 +239,71 @@ def classname(request, owner, repo, classname):
     '''
 
     repo = Repository.objects.get(owner=owner, name=repo)
+
+    #statistics
+    reports = repo.reports.filter(test_suite__test_cases__classname=classname)
+    last_report = reports.order_by('-build_number')[0]
+
+    passes = reports.exclude(Q(test_suite__test_cases__result='failure') | Q(test_suite__test_cases__result='error')).order_by('-build_number')
+    if passes.count() > 0:
+        last_pass = passes[0]
+        last_pass_build = last_pass.build_number
+        last_pass_date = last_pass.date
+    else:
+        last_pass_build = None
+        last_pass_date = None
+
+    fails = reports.filter(Q(test_suite__test_cases__result='failure') | Q(test_suite__test_cases__result='error')).order_by('-build_number')
+    if fails.count() > 0:
+        last_fail = fails[0]
+        last_fail_build = last_fail.build_number
+        last_fail_date = last_fail.date
+    else:
+        last_fail_build = None
+        last_fail_date = None
+
+    statistics = {
+        'builds': reports.aggregate(builds=Count('build_number', distinct=True))['builds'],
+        'reports': reports.distinct().count(),
+        'cases': reports.values('test_suite__test_cases__classname', 'test_suite__test_cases__name').distinct().count(),
+        'last_report_build': last_report.build_number,
+        'last_report_date': last_report.date,
+        'last_pass_build': last_pass_build,
+        'last_pass_date': last_pass_date,
+        'last_fail_build': last_fail_build,
+        'last_fail_date': last_fail_date,
+        }
+
+    #trends
+    reports = repo.reports\
+        .filter(test_suite__test_cases__classname=classname)\
+        .order_by('build_number', '-name')\
+        .annotate(
+            time=Sum('test_suite__test_cases__time'),
+            cases=Count('test_suite__test_cases'),
+            )
+
+    trends = {
+        'report': [],
+        'pass_rate': [],
+        'time': [],
+        'classes': [],
+        'cases': [],
+    }
+    for report in reports:
+        passes = report.test_suite.test_cases.filter(result='pass').count()
+        failures = report.test_suite.test_cases.filter(result='failure').count()
+        errors = report.test_suite.test_cases.filter(result='error').count()
+
+        if passes + failures + errors > 0:
+            pass_rate = passes / (passes + failures + errors) * 100.
+        else:
+            pass_rate = float('nan')
+
+        trends['report'].append({'build_number': report.build_number, 'name': report.name})
+        trends['pass_rate'].append(pass_rate)
+        trends['time'].append(report.time)
+        trends['cases'].append(report.cases)
 
     # reports
     reports = []
@@ -211,6 +366,8 @@ def classname(request, owner, repo, classname):
         context={
             'repo': repo,
             'classname': classname,
+            'statistics': statistics,
+            'trends': trends,
             'reports': reports,
             'cases': cases,
             }
@@ -233,6 +390,55 @@ def case(request, owner, repo, classname, case):
 
     repo = Repository.objects.get(owner=owner, name=repo)
 
+    #statistics
+    reports = repo.reports.filter(test_suite__test_cases__classname=classname, test_suite__test_cases__name=case)
+    last_report = reports.order_by('-build_number')[0]
+
+    passes = reports.exclude(Q(test_suite__test_cases__result='failure') | Q(test_suite__test_cases__result='error')).order_by('-build_number')
+    if passes.count() > 0:
+        last_pass = passes[0]
+        last_pass_build = last_pass.build_number
+        last_pass_date = last_pass.date
+    else:
+        last_pass_build = None
+        last_pass_date = None
+
+    fails = reports.filter(Q(test_suite__test_cases__result='failure') | Q(test_suite__test_cases__result='error')).order_by('-build_number')
+    if fails.count() > 0:
+        last_fail = fails[0]
+        last_fail_build = last_fail.build_number
+        last_fail_date = last_fail.date
+    else:
+        last_fail_build = None
+        last_fail_date = None
+
+    statistics = {
+        'builds': reports.aggregate(builds=Count('build_number', distinct=True))['builds'],
+        'reports': reports.distinct().count(),
+        'last_report_build': last_report.build_number,
+        'last_report_date': last_report.date,
+        'last_pass_build': last_pass_build,
+        'last_pass_date': last_pass_date,
+        'last_fail_build': last_fail_build,
+        'last_fail_date': last_fail_date,
+        }
+
+    #trends
+    reports = TestCase.objects\
+        .filter(
+            test_suite__report__repository=repo,
+            classname=classname,
+            name=case)\
+        .order_by('test_suite__report__build_number', '-test_suite__report__name')
+    trends = {
+        'report': [],
+        'time': [],
+    }
+    for report in reports:
+        trends['report'].append({'build_number': report.test_suite.report.build_number, 'name': report.test_suite.report.name})
+        trends['time'].append(report.time)
+
+    #cases
     cases = TestCase.objects\
         .filter(
             test_suite__report__repository=repo,
@@ -244,6 +450,8 @@ def case(request, owner, repo, classname, case):
         context={
             'repo': repo,
             'classname': classname,
+            'statistics': statistics,
+            'trends': trends,
             'case': case,
             'cases': cases,
             }
@@ -265,6 +473,27 @@ def build(request, owner, repo, build):
 
     repo = Repository.objects.get(owner=owner, name=repo)
 
+    #statistics
+    reports = repo.reports.filter(build_number=build)
+
+    passes = reports.filter(test_suite__test_cases__result='pass').count()
+    failures = reports.filter(test_suite__test_cases__result='failure').count()
+    errors = reports.filter(test_suite__test_cases__result='error').count()
+
+    if passes + failures + errors > 0:
+        pass_rate = passes / (passes + failures + errors) * 100
+    else:
+        pass_rate = float('nan')
+
+    statistics = {
+        'reports': reports.distinct().count(),
+        'classes': reports.values('test_suite__test_cases__classname').distinct().count(),
+        'cases': reports.values('test_suite__test_cases__name').distinct().count(),
+        'pass_rate': pass_rate,
+        'time': reports.aggregate(time=Sum('test_suite__test_cases__time'))['time'] / reports.count(),
+    }
+
+    #reports
     reports = []
     for report in repo.reports.filter(build_number=build).order_by('name').annotate(time=Sum('test_suite__test_cases__time')):
         suite = report.test_suite
@@ -340,6 +569,7 @@ def build(request, owner, repo, build):
     return render_template(request, 'build.html',
         context={
             'repo': repo,
+            'statistics': statistics,
             'reports': reports,
             'cases': cases,
             }
@@ -363,12 +593,35 @@ def report(request, owner, repo, build, report):
 
     repo = Repository.objects.get(owner=owner, name=repo)
     report = repo.reports.get(build_number=build, name=report)
+
+
+    #statistics
+    cases = report.test_suite.test_cases
+
+    passes = cases.filter(result='pass').count()
+    failures = cases.filter(result='failure').count()
+    errors = cases.filter(result='error').count()
+
+    if passes + failures + errors > 0:
+        pass_rate = passes / (passes + failures + errors) * 100
+    else:
+        pass_rate = float('nan')
+
+    statistics = {
+        'classes': cases.values('classname').distinct().count(),
+        'cases': cases.count(),
+        'pass_rate': pass_rate,
+        'time': cases.aggregate(time=Sum('time'))['time'],
+    }
+
+    #cases
     cases = report.test_suite.test_cases.order_by('name')
 
     return render_template(request, 'report.html',
         context={
             'repo': repo,
             'report': report,
+            'statistics': statistics,
             'cases': cases,
             }
         )
