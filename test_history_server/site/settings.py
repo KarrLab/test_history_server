@@ -20,8 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-with open(os.path.join(BASE_DIR, 'site', 'SECRET_KEY'), 'r') as file:
-    SECRET_KEY = file.read().rstrip()
+SECRET_KEY_FILENAME = os.path.join(BASE_DIR, 'site', 'SECRET_KEY')
+if os.path.isfile(SECRET_KEY_FILENAME):
+    with open(SECRET_KEY_FILENAME, 'r') as file:
+        SECRET_KEY = file.read().rstrip()
+else:
+    SECRET_KEY = None
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -79,8 +83,12 @@ WSGI_APPLICATION = 'test_history_server.site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-with open(os.path.join(BASE_DIR, 'site', 'DATABASE_DEFAULT_PASSWORD'), 'r') as file:
-    DB_PASSWORD = file.read().rstrip()
+DATABASE_PASSWORD_FILENAME = os.path.join(BASE_DIR, 'site', 'DATABASE_DEFAULT_PASSWORD')
+if os.path.isfile(DATABASE_PASSWORD_FILENAME):
+    with open(DATABASE_PASSWORD_FILENAME, 'r') as file:
+        DB_PASSWORD = file.read().rstrip()
+else:
+    DB_PASSWORD = None
 
 DATABASES = {
     'default': {
@@ -177,6 +185,9 @@ XML_REPORTS_DIR = os.path.join(BASE_DIR, 'core', 'xml_reports')
 REST_API_TOKEN_FILENAME = os.path.join(BASE_DIR, 'rest', 'REST_API_TOKEN')
 #:obj:`str`: path to file with REST API token
 
-with open(REST_API_TOKEN_FILENAME, 'r') as file:
-    REST_API_TOKEN = file.read().rstrip()
-    #:obj:`str`: REST API token; used to authenticate with server for submitting test reports
+if os.path.isfile(REST_API_TOKEN_FILENAME):
+    with open(REST_API_TOKEN_FILENAME, 'r') as file:
+        REST_API_TOKEN = file.read().rstrip()
+        #:obj:`str`: REST API token; used to authenticate with server for submitting test reports
+else:
+    REST_API_TOKEN = None
