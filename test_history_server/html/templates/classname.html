@@ -10,6 +10,11 @@
 {% endblock %}
 
 {% block content %}
+<h4>Info</h4>
+<ul>
+  <li>Latest file: <a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{reports.0.repository_revision}}/{{reports.0.file}}">{{reports.0.file}}</a></li>
+</ul>
+
 <h4>Statistics</h4>
 <ul>
   <li>Builds: {{statistics.builds}}</li>
@@ -159,6 +164,7 @@
   <thead>
     <tr>
       <th>Case</th>
+      <th>Line</th>
       <th>Builds</th>
       <th>Reports</th>
     </tr>
@@ -167,6 +173,7 @@
     {% for case in cases %}
       <tr>
         <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=classname case=case.name %}">{{case.name}}</a></td>
+        <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{case.repository_revision}}/{{case.file}}#L{{case.line|add:1}}">{{case.line|add:1}}</a></td>
         <td>{{case.builds}}</td>
         <td>{{case.reports}}</td>
       </tr>

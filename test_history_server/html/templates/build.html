@@ -77,11 +77,13 @@
     <tr>
       <th>Class</th>
       <th>Case</th>
-      <th>Tests</th>
-      <th>Passes</th>
-      <th>Skips</th>
-      <th>Failures</th>
-      <th>Errors</th>
+      <th>File</th>
+      <th>Line</th>
+      <th>Test</th>
+      <th>Pass</th>
+      <th>Skip</th>
+      <th>Fail</th>
+      <th>Error</th>
       <th>Time (s)</th>
       <th colspan="2">% Pass</th>
     </tr>
@@ -91,6 +93,8 @@
     <tr>
       <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=case.classname %}">{{case.classname}}</a></td>
       <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=case.classname case=case.name %}">{{case.name}}</a></td>
+      <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/case.repository_revision/{{case.file}}#L{{case.line}}">{{case.file}}</a></td>
+      <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/case.repository_revision/{{case.file}}#L{{case.line}}">{{case.line|add:1}}</a></td>
       <td>{{case.tests}}</td>
       <td>{{case.passes}}</td>
       <td>{{case.skips}}</td>

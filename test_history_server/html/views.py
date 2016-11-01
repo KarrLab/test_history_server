@@ -213,6 +213,19 @@ def repo(request, owner, repo):
         builds=Count('test_suite__report__build_number', distinct=True),
         reports=Count('test_suite__report', distinct=True),
         )
+    modules_html = []
+    for module in modules:
+        last_case = TestCase.objects.filter(test_suite__report__repository=repo, classname=module['classname'])\
+            .order_by('-test_suite__report__build_number', 'test_suite__report__name')[0]
+
+        modules_html.append({
+            'classname': module['classname'],
+            'repository_revision': last_case.test_suite.report.repository_revision,
+            'file': last_case.file,
+            'cases': module['cases'],
+            'builds': module['builds'],
+            'reports': module['reports'],
+        })
 
     return render_template(request, 'repo.html',
         context={
@@ -220,7 +233,7 @@ def repo(request, owner, repo):
             'statistics': statistics,
             'trends': trends,
             'reports': reports,
-            'modules': modules,
+            'modules': modules_html,
             }
         )
 
@@ -339,6 +352,7 @@ def classname(request, owner, repo, classname):
         reports.append({
             'repository_branch': report['test_suite__report__repository_branch'],
             'repository_revision': report['test_suite__report__repository_revision'],
+            'file': cases[0].file,
             'build_number': report['test_suite__report__build_number'],
             'date': report['test_suite__report__date'],
             'name': report['test_suite__report__name'],
@@ -362,6 +376,23 @@ def classname(request, owner, repo, classname):
             reports=Count('test_suite__report', distinct=True),
             )
 
+    cases_html = []
+    for case in cases:
+
+        last_case = TestCase.objects\
+            .filter(test_suite__report__repository=repo, classname=classname, name=case['name'])\
+            .order_by('-test_suite__report__build_number', 'test_suite__report__name')[0]
+
+        cases_html.append({
+            'name': case['name'],
+            'repository_revision': last_case.test_suite.report.repository_revision,
+            'file': last_case.file,
+            'line': last_case.line,
+            'builds': case['builds'],
+            'reports': case['reports'],
+        })
+
+
     return render_template(request, 'classname.html',
         context={
             'repo': repo,
@@ -369,7 +400,7 @@ def classname(request, owner, repo, classname):
             'statistics': statistics,
             'trends': trends,
             'reports': reports,
-            'cases': cases,
+            'cases': cases_html,
             }
         )
 
@@ -532,7 +563,7 @@ def build(request, owner, repo, build):
     for case in TestCase.objects\
         .filter(test_suite__report__repository=repo, test_suite__report__build_number=build)\
         .order_by('name')\
-        .values('classname', 'name')\
+        .values('classname', 'name', 'file', 'line', 'test_suite__report__repository_revision')\
         .annotate(time=Sum('time')):
 
         temp = TestCase.objects.filter(
@@ -556,6 +587,9 @@ def build(request, owner, repo, build):
         cases.append({
             'classname': case['classname'],
             'name': case['name'],
+            'repository_revision': case['test_suite__report__repository_revision'],
+            'file': case['file'],
+            'line': case['line'],
             'tests': tests,
             'passes': passes,
             'skips': skips,
