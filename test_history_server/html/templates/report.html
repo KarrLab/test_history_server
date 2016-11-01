@@ -26,7 +26,7 @@
     <tr>
       <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=case.classname %}">{{case.classname}}</a></td>
       <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=case.classname case=case.name %}">{{case.name}}</a></td>
-      <td><span {% if not case.result == 'pass' %} class="alert"{% endif %}>{{case.result|capfirst}}</span></td>
+      <td><span {% if case.result == 'error' or case.result == 'failure' %} class="alert"{% endif %}>{{case.result|capfirst}}</span></td>
       <td>{{case.time|floatformat:3}}</td>
     </tr>
       {% endwith %}

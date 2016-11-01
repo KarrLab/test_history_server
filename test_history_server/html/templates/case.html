@@ -32,7 +32,7 @@
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_branch}}">{{report.repository_branch}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{report.repository_revision}}">{{report.repository_revision|truncatechars:7}}</a></td>
       <td>{{report.date|date:"Y-m-d H:i:s"}}</td>
-      <td><span{% if not case.result == 'pass' %} class="alert"{% endif %}>{{case.result|capfirst}}<span></td>
+      <td><span{% if case.result == 'error' or case.result == 'failure' %} class="alert"{% endif %}>{{case.result|capfirst}}<span></td>
       <td>{{case.time|floatformat:3}}</td>
     </tr>
       {% endwith %}

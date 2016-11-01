@@ -26,7 +26,9 @@ def index(request):
         repositories.append({
             'name': repo.name,
             'owner': repo.owner,
-            'status_is_pass': report.test_suite.test_cases.exclude(result='pass').count() == 0,
+            'status_is_pass': \
+                report.test_suite.test_cases.filter(result='error').count() == 0 and \
+                report.test_suite.test_cases.filter(result='failure').count() == 0,
             'build_number': report.build_number,
             'report_name': report.name,
             'report_date': report.date,
