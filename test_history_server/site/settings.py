@@ -25,7 +25,8 @@ if os.path.isfile(SECRET_KEY_FILENAME):
     with open(SECRET_KEY_FILENAME, 'r') as file:
         SECRET_KEY = file.read().rstrip()
 else:
-    SECRET_KEY = None
+    import random, string
+    SECRET_KEY = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(50))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
