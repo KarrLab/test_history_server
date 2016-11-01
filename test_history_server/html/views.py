@@ -55,6 +55,13 @@ def repo(request, owner, repo):
         errors = suite.test_cases.filter(result='error').count()
         time = report.time
 
+        if passes + failures + errors > 0:
+            percent_pass = passes / (passes + failures + errors) * 100
+            percent_fail = 100 - percent_pass
+        else:
+            percent_pass = float('nan')
+            percent_fail = float('nan')
+
         reports.append({
             'build_number': report.build_number,
             'repository_branch': report.repository_branch,
@@ -67,8 +74,8 @@ def repo(request, owner, repo):
             'failures': failures,
             'errors': errors,
             'time': time,
-            'percent_pass': passes / (passes + failures + errors) * 100,
-            'percent_fail': (1 - passes / (passes + failures + errors)) * 100,
+            'percent_pass': percent_pass,
+            'percent_fail': percent_fail,
         })
 
     # modules
@@ -114,6 +121,13 @@ def classname(request, owner, repo, classname):
         failures = cases.filter(result='failure').count()
         errors = cases.filter(result='error').count()
 
+        if passes + failures + errors > 0:
+            percent_pass = passes / (passes + failures + errors) * 100
+            percent_fail = 100 - percent_pass
+        else:
+            percent_pass = float('nan')
+            percent_fail = float('nan')
+
         reports.append({
             'repository_branch': report['test_suite__report__repository_branch'],
             'repository_revision': report['test_suite__report__repository_revision'],
@@ -126,8 +140,8 @@ def classname(request, owner, repo, classname):
             'failures': failures,
             'errors': errors,
             'time': report['time'],
-            'percent_pass': passes / (passes + failures + errors) * 100,
-            'percent_fail': (1 - passes / (passes + failures + errors)) * 100,
+            'percent_pass': percent_pass,
+            'percent_fail': percent_fail,
         })
 
     # cases
@@ -182,6 +196,13 @@ def build(request, owner, repo, build):
         errors = suite.test_cases.filter(result='error').count()
         time = report.time
 
+        if passes + failures + errors > 0:
+            percent_pass = passes / (passes + failures + errors) * 100
+            percent_fail = 100 - percent_pass
+        else:
+            percent_pass = float('nan')
+            percent_fail = float('nan')
+
         reports.append({
             'build_number': build,
             'repository_branch': report.repository_branch,
@@ -194,8 +215,8 @@ def build(request, owner, repo, build):
             'failures': failures,
             'errors': errors,
             'time': time,
-            'percent_pass': passes / (passes + failures + errors) * 100,
-            'percent_fail': (1 - passes / (passes + failures + errors)) * 100,
+            'percent_pass': percent_pass,
+            'percent_fail': percent_fail,
         })
 
     cases = []
@@ -216,6 +237,13 @@ def build(request, owner, repo, build):
         failures = temp.filter(result='failure').count()
         errors = temp.filter(result='error').count()
 
+        if passes + failures + errors > 0:
+            percent_pass = passes / (passes + failures + errors) * 100
+            percent_fail = 100 - percent_pass
+        else:
+            percent_pass = float('nan')
+            percent_fail = float('nan')
+
         cases.append({
             'classname': case['classname'],
             'name': case['name'],
@@ -225,8 +253,8 @@ def build(request, owner, repo, build):
             'failures': failures,
             'errors': errors,
             'time': case['time'],
-            'percent_pass': passes / (passes + failures + errors) * 100,
-            'percent_fail': (1 - passes / (passes + failures + errors)) * 100,
+            'percent_pass': percent_pass,
+            'percent_fail': percent_fail,
         })
 
     return render_template(request, 'build.html',
