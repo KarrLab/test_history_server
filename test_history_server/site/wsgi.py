@@ -9,7 +9,8 @@ import sys, os
 
 # Use python 3.5.2
 INTERP = "/home/karrlab_tests/opt/python-3.5.2/bin/python"
-if sys.executable != INTERP: os.execl(INTERP, INTERP, *sys.argv)
+if os.path.isfile(INTERP) and sys.executable != INTERP:
+    os.execl(INTERP, INTERP, *sys.argv)
 
 # Instantiate application
 from django.core.wsgi import get_wsgi_application
