@@ -10,6 +10,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^(?P<owner>[^/]+)/*$', views.owner, name='owner'),
     url(r'^(?P<owner>[^/]+)/(?P<repo>[^/]+)/*$', views.repo, name='repo'),
     url(r'^(?P<owner>[^/]+)/(?P<repo>[^/]+)/(?P<build>[0-9]+)/*$', views.build, name='build'),
     url(r'^(?P<owner>[^/]+)/(?P<repo>[^/]+)/(?P<build>[0-9]+)/(?P<report>[^/]+)/*$', views.report, name='report'),

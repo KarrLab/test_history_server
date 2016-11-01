@@ -27,8 +27,29 @@ def index(request):
     Returns:
         :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
     '''
+    owners = Repository.objects\
+        .order_by('owner')\
+        .values('owner')\
+        .annotate(repositories=Count('name', distinct=True))
+
+    return render_template(request, 'index.html',
+        context={
+            'owners': owners
+            }
+        )
+
+def owner(request, owner):
+    ''' Returns HTML for owner page which displays a list of repositories
+
+    Args:
+        request (:obj:`django.http.request.HttpRequest`): HTTP request
+        owner (:obj:`str`): name of owner
+
+    Returns:
+        :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
+    '''
     repositories = []
-    for repo in Repository.objects.all():
+    for repo in Repository.objects.filter(owner=owner):
         report = repo.reports.order_by('-date')[0]
         repositories.append({
             'name': repo.name,
@@ -41,8 +62,9 @@ def index(request):
             'report_date': report.date,
         })
 
-    return render_template(request, 'index.html',
+    return render_template(request, 'owner.html',
         context={
+            'owner': owner,
             'repositories': repositories
             }
         )

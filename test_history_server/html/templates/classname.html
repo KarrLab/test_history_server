@@ -4,7 +4,7 @@
 
 {% block head_title %}{{ block.super }} :: {{repo.owner}} / {{repo.name}} / {{classname}}{% endblock %}
 {% block page_title %}
-<a href="{% url 'index' %}">{{repo.owner}}</a>
+<a href="{% url 'owner' owner=repo.owner %}">{{repo.owner}}</a>
  / <a href="{% url 'repo' owner=repo.owner repo=repo.name %}">{{repo.name}}</a>
  / <a href="{% url 'classname' owner=repo.owner repo=repo.name classname=classname %}">{{classname}}</a>
 {% endblock %}
