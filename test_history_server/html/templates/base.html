@@ -23,13 +23,13 @@ Created: 2015-04-28
       	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
         <title>{% block head_title %}Karr Lab{% endblock %}</title>
-        <link rel="stylesheet" href="{% get_static_prefix %}/css/foundation.css" />
-        <link rel="stylesheet" href="{% get_static_prefix %}/css/foundation-icons.css" />
-        <link rel="stylesheet" href="{% get_static_prefix %}/css/extras.css" />
-        <link rel="stylesheet" href="{% get_static_prefix %}/css/test_history_server.css" />
-        <script src="{% get_static_prefix %}/js/vendor/modernizr.js"></script>
+        <link rel="stylesheet" href="{% get_static_prefix %}css/foundation.css" />
+        <link rel="stylesheet" href="{% get_static_prefix %}css/foundation-icons.css" />
+        <link rel="stylesheet" href="{% get_static_prefix %}css/extras.css" />
+        <link rel="stylesheet" href="{% get_static_prefix %}css/test_history_server.css" />
+        <script src="{% get_static_prefix %}js/vendor/modernizr.js"></script>
 
-        <link rel="icon" type="image/x-icon" href="{% get_static_prefix %}/img/logo-mssm-16x16.ico" />
+        <link rel="icon" type="image/x-icon" href="{% get_static_prefix %}img/logo-mssm-16x16.ico" />
     </head>
     <body>
         <div class="off-canvas-wrap" data-offcanvas>
@@ -86,6 +86,8 @@ Created: 2015-04-28
                         <div class="centered">
                         <!-- end common header -->
 
+                        <h3>{% block page_title %}{% endblock %}</h3>
+
                         {% block content %}{% endblock %}
 
                         <!-- common footer -->
@@ -95,7 +97,7 @@ Created: 2015-04-28
                     <!-- bottom bar -->
                     <div class="row bottom-bar">
                         <div class="logo">
-                            <a href="http://www.mssm.edu"><img src="{% get_static_prefix %}/img/logo-mssm-32x32.png" /></a>
+                            <a href="http://www.mssm.edu"><img src="{% get_static_prefix %}img/logo-mssm-32x32.png" /></a>
                         </div>
 
                         <div class="text-left">
@@ -118,8 +120,8 @@ Created: 2015-04-28
             </div>
         </div>
 
-        <script src="{% get_static_prefix %}/js/vendor/jquery.js"></script>
-        <script src="{% get_static_prefix %}/js/foundation.min.js"></script>
+        <script src="{% get_static_prefix %}js/vendor/jquery.js"></script>
+        <script src="{% get_static_prefix %}js/foundation.min.js"></script>
         <script>
         $(document).foundation();
         </script>

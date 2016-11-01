@@ -1,6 +1,17 @@
 # compiled files
 *.pyc
 
+# migrations
+test_history_server/core/migrations/
+
+#dream host configuration
+passenger_wsgi.py
+
+# tokens and passwords
+test_history_server/site/DATABASE_DEFAULT_PASSWORD
+test_history_server/site/SECRET_KEY
+test_history_server/rest/REST_API_TOKEN
+
 # log
 test_history_server/log/
 
@@ -9,5 +20,7 @@ docs/_build/
 docs/source/
 
 # test reports
-public/static/repo/
+test_history_server/core/xml_reports/
 
+# temp files
+tmp/

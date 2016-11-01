@@ -1,15 +1,36 @@
-#repositories{
-    width:100%;
+.alert {
+    color:red
 }
-#repositories thead th {
-    background:#d9d9d9;
+.percent_bar{
+  width: 250px;
+  border:1px solid #222;
+  height:16px;
+  margin:0px;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
-#repositories thead th,
-#repositories tbody td {
-    padding-left:2px;
-    padding-right:2px;
+.percent_bar .pass{
+  background: #3fa3dc;
+  margin:0px;
+  padding:0px;
+}
+.percent_bar .fail{
+  background: #ff0000;
+  margin:0px;
+  padding:0px;
 }
 
-#repositories tbody td.alert {
-    color:red
+table{
+    width:100%;
+}
+table thead tr th {
+    background: #d9d9d9;
+}
+table thead tr th,
+table tbody tr td {
+  margin:0px;
+  padding:0px;
+  padding-left:2px;
+  padding-right:2px;
+  line-height: 1rem
 }

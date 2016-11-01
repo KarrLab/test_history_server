@@ -1,0 +1,4 @@
+User-agent: *
+Crawl-delay: 10
+Host: {{ BASE_DOMAIN }}
+Sitemap: {{ BASE_URL }}{% url sitemap %}

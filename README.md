@@ -31,7 +31,7 @@ The following example illustrates how to add test reports to the database:
 ```
 import requests
 
-r = requests.post('<settings.ROOT_URL>/submit_report',
+r = requests.post('<settings.ROOT_URL>/submit_test_suite',
       data={
           'token': <test_server_token>,
           'repo_name': <repo_name>,
@@ -39,10 +39,10 @@ r = requests.post('<settings.ROOT_URL>/submit_report',
           'repo_branch': <repo_branch>,
           'repo_revision': <repo_revision>,
           'build_num': <build_num>,
-          'report_name': <extra textual label for individual reports within build, such as to indicate results from different versions of Python>,
+          'suite_name': <extra textual label for individual reports within build, such as to indicate results from different versions of Python>,
       },
       files={
-          'report': </path/to/junit-style-XML-test-report.xml>,
+          'suite': </path/to/junit-style-XML-test-report.xml>,
       })
 
 r_json = r.json()
@@ -57,7 +57,7 @@ if not r_json['success']:
 Please see the [API documentation](http://test_history_server.readthedocs.io).
 
 ### REST API
-* Endpoint: `<settings.ROOT_URL>/submit_report`
+* Endpoint: `<settings.ROOT_URL>/submit_test_suite`
 * Method: POST
 * Arguments:
   * `token` (string): secret token used to authenticate with server
@@ -66,8 +66,8 @@ Please see the [API documentation](http://test_history_server.readthedocs.io).
   * `repo_branch` (string):  the name of the branch of the repository that was tested
   * `repo_revision` (string): the SHA1 key of the revision that was tested
   * `build_num` (integer): the build number that was tested
-  * `report_name` (string, optional): textual label for individual reports within build, such as to indicate results from different versions of Python
-  * `report` (file): JUnit-style XML test report
+  * `suite_name` (string, optional): textual label for individual reports within build, such as to indicate results from different versions of Python
+  * `suite` (file): JUnit-style XML test report
 
 ## License
 The build utilities are released under the [MIT license](LICENSE).

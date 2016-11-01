@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block head_title %}{{ block.super }} :: {{repo.owner}} / {{repo.name}} / {{classname}}{% endblock %}
+{% block page_title %}
+<a href="{% url 'index' %}">{{repo.owner}}</a>
+ / <a href="{% url 'repo' owner=repo.owner repo=repo.name %}">{{repo.name}}</a>
+ / <a href="{% url 'classname' owner=repo.owner repo=repo.name classname=classname %}">{{classname}}</a>
+{% endblock %}
+
+{% block content %}
+<h4>Reports</h4>
+<table cellpadding=0 cellspacing=0>
+  <thead>
+    <tr>
+      <th>Build</th>
+      <th>Report</th>
+      <th>Branch</th>
+      <th>Revision</th>
+      <th>Date</th>
+      <th>Tests</th>
+      <th>Passes</th>
+      <th>Skips</th>
+      <th>Failures</th>
+      <th>Errors</th>
+      <th>Time (s)</th>
+      <th colspan="2">% Pass</th>
+    </tr>
+  </head>
+  <tbody>
+    {% for report in reports %}
+      <tr>
+        <td><a href="{% url 'build' owner=repo.owner repo=repo.name build=report.build_number %}">{{report.build_number}}</a></td>
+        <td><a href="{% url 'report' owner=repo.owner repo=repo.name build=report.build_number report=report.name %}">{{report.name}}</a></td>
+        <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_branch}}">{{report.repository_branch}}</a></td>
+        <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{report.repository_revision}}">{{report.repository_revision|truncatechars:7}}</a></td>
+        <td>{{report.date|date:"Y-m-d H:i:s"}}</td>
+        <td>{{report.tests}}</td>
+        <td>{{report.passes}}</td>
+        <td>{{report.skips}}</td>
+        <td>{{report.failures}}</td>
+        <td>{{report.errors}}</td>
+        <td>{{report.time|floatformat:3}}</td>
+        <td>
+          <table class="percent_bar" cellpadding=0 cellspacing=0>
+            <tr>
+              <td class="pass" style="width:{{report.percent_pass}}%"></td>
+              <td class="fail" style="width:{{report.percent_fail}}%"></td>
+            </tr>
+          </table>
+        </td>
+        <td>{{report.percent_pass|floatformat:1}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<h4>Test cases</h4>
+<table cellpadding=0 cellspacing=0>
+  <thead>
+    <tr>
+      <th>Case</th>
+      <th>Builds</th>
+      <th>Reports</th>
+    </tr>
+  </head>
+  <tbody>
+    {% for case in cases %}
+      <tr>
+        <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=classname case=case.name %}">{{case.name}}</a></td>
+        <td>{{case.builds}}</td>
+        <td>{{case.reports}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

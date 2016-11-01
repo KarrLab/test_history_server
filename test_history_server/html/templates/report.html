@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block head_title %}{{ block.super }} :: {{repo.owner}} / {{repo.name}} / {{report.build_number}} / {{report.name}}{% endblock %}
+{% block page_title %}
+<a href="{% url 'index' %}">{{repo.owner}}</a>
+ / <a href="{% url 'repo' owner=repo.owner repo=repo.name %}">{{repo.name}}</a>
+ / <a href="{% url 'build' owner=repo.owner repo=repo.name build=report.build_number %}">{{report.build_number}}</a>
+ / <a href="{% url 'report' owner=repo.owner repo=repo.name build=report.build_number report=report.name %}">{{report.name}}</a>
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<table cellpadding=0 cellspacing=0>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th>Case</th>
+      <th>Result</th>
+      <th>Time (s)</th>
+    </tr>
+  </head>
+  <tbody>
+    {% for case in cases %}
+      {% with report=case.test_suite.report %}
+    <tr>
+      <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=case.classname %}">{{case.classname}}</a></td>
+      <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=case.classname case=case.name %}">{{case.name}}</a></td>
+      <td><span {% if not case.result == 'pass' %} class="alert"{% endif %}>{{case.result|capfirst}}</span></td>
+      <td>{{case.time|floatformat:3}}</td>
+    </tr>
+      {% endwith %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
