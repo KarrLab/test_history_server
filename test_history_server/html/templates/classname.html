@@ -2,11 +2,11 @@
 
 {% load static %}
 
-{% block head_title %}{{ block.super }} :: {{repo.owner}} / {{repo.name}} / {{classname}}{% endblock %}
+{% block head_title %}{{ block.super }} :: {{repo.owner}} / {{repo.name}} / {{classname|default:'--None--'}}{% endblock %}
 {% block page_title %}
 <a href="{% url 'owner' owner=repo.owner %}">{{repo.owner}}</a>
  / <a href="{% url 'repo' owner=repo.owner repo=repo.name %}">{{repo.name}}</a>
- / <a href="{% url 'classname' owner=repo.owner repo=repo.name classname=classname %}">{{classname}}</a>
+ / <a href="{% url 'classname' owner=repo.owner repo=repo.name classname=classname|default:'__None__' %}">{{classname|default:'--None--'}}</a>
 {% endblock %}
 
 {% block content %}
@@ -172,7 +172,7 @@
   <tbody>
     {% for case in cases %}
       <tr>
-        <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=classname case=case.name %}">{{case.name}}</a></td>
+        <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=classname|default:'__None__' case=case.name %}">{{case.name}}</a></td>
         <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{case.repository_revision}}/{{case.file}}#L{{case.line|add:1}}">{{case.line|add:1}}</a></td>
         <td>{{case.builds}}</td>
         <td>{{case.reports}}</td>

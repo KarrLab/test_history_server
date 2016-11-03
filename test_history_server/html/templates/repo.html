@@ -197,7 +197,7 @@
   <tbody>
   {% for module in modules %}
     <tr>
-      <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=module.classname %}">{{module.classname}}</a></td>
+      <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=module.classname|default:'__None__' %}">{{module.classname|default:'--None--'}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{module.repository_revision}}/{{module.file}}">{{module.file}}</a></td>
       <td>{{module.cases}}</td>
       <td>{{module.builds}}</td>

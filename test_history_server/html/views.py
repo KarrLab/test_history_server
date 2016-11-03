@@ -251,6 +251,9 @@ def classname(request, owner, repo, classname):
         :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
     '''
 
+    if classname == '__None__':
+        classname = ''
+
     repo = Repository.objects.get(owner=owner, name=repo)
 
     #statistics
@@ -418,6 +421,9 @@ def case(request, owner, repo, classname, case):
     Returns:
         :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
     '''
+
+    if classname == '__None__':
+        classname = ''
 
     repo = Repository.objects.get(owner=owner, name=repo)
 
