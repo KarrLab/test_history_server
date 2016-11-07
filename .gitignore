@@ -24,3 +24,6 @@ test_history_server/core/xml_reports/
 
 # temp files
 tmp/
+
+# data dumps
+test_history_server/dump/

@@ -73,7 +73,14 @@ def submit_report(request):
     report_xml = doc_xml.getElementsByTagName("testsuite")[0]
 
     #add repo, report, test suite, and test cases to database
-    repo, created = Repository.objects.get_or_create(name=repo_name, owner=repo_owner)
+    try:
+        repo = Repository.objects.get(name=repo_name, owner=repo_owner)
+    except ObjectDoesNotExist:
+        try:
+            repo = Repository.objects.get(aliases__name=repo_name, owner=repo_owner)
+        except:
+            repo = Repository.objects.create(name=repo_name, owner=repo_owner)
+            repo.save()
 
     report, created = Report.objects.get_or_create(
         repository=repo,

@@ -22,10 +22,20 @@ class Repository(Model):
     owner = CharField(max_length=255, verbose_name='Owner')
 
     class Meta:
-        verbose_name='Repository'
+        verbose_name = 'Repository'
         verbose_name_plural = 'Repositories'
         ordering = ['name']
         get_latest_by = 'test_suites__date'
+
+
+class RepositoryAlias(Model):
+    repository = ForeignKey('Repository', related_name='aliases', verbose_name='Repository')
+    name = CharField(max_length=255, verbose_name='Name')
+
+    class Meta:
+        verbose_name = 'Repository alias'
+        verbose_name_plural = 'Repository aliases'
+        ordering = ['name']
 
 
 class Report(Model):

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     #'django.contrib.sessions',
     #'django.contrib.messages',
     #'django.contrib.staticfiles',
+    'test_history_server.cli',
     'test_history_server.core',
     'test_history_server.html',
     'test_history_server.rest',
