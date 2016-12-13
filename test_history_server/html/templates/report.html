@@ -27,10 +27,24 @@
   <li>Time (s): {{statistics.time|floatformat:2}}</li>
 </ul>
 
+<script type="text/javascript">
+    function toggleCase(case_id) {
+        caseObj = $('#' + case_id)
+        if (caseObj.css('display') == 'none') {
+            caseObj.css('display', 'table')
+            caseObj.parent().css('padding', '10px')
+        } else {
+            caseObj.css('display', 'none')
+            caseObj.parent().css('padding', '0px')
+        }
+    }
+</script>
+
 <h4>Test cases</h4>
-<table cellpadding=0 cellspacing=0>
+<table cellpadding=0 cellspacing=0 class="cases">
   <thead>
     <tr>
+      <th><i class="fi-plus"></i></th>
       <th>Class</th>
       <th>Case</th>
       <th>File</th>
@@ -43,12 +57,26 @@
     {% for case in cases %}
       {% with report=case.test_suite.report %}
     <tr>
+      <td><i class="fi-plus" onclick="javascript: toggleCase('case_{{forloop.counter}}')"></i></td>
       <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=case.classname|default:'__None__' %}">{{case.classname|default:'--None--'}}</a></td>
       <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=case.classname|default:'__None__' case=case.name %}">{{case.name}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_revision}}/{{case.file}}#L{{case.line}}">{{case.file}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_revision}}/{{case.file}}#L{{case.line|add:1}}">{{case.line|add:1}}</a></td>
       <td><span {% if case.result == 'error' or case.result == 'failure' %} class="alert"{% endif %}>{{case.result|capfirst}}</span></td>
       <td>{{case.time|floatformat:3}}</td>
+    </tr>
+    <tr>
+      <td colspan="7">
+        <table class="details" cellpadding=0 cellspacing=0 id="case_{{forloop.counter}}" style="display:none;">
+          <tbody>
+            <tr><th>Result type</th><td>{{case.result_type}}</txd></tr>
+            <tr><th>Message</th><td>{{case.result_message}}</td></tr>
+            <tr><th>Details</th><td><pre>{{case.result_details}}</pre></td></tr>
+            <tr><th>Standard output</th><td><pre>{{case.stdout}}</pre></td></tr>
+            <tr><th>Standard error</th><td><pre>{{case.stdeerr}}</pre></td></tr>
+          </tbody>
+        </table>
+      </td>
     </tr>
       {% endwith %}
     {% endfor %}
