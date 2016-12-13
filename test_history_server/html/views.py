@@ -187,8 +187,8 @@ def repo(request, owner, repo):
             percent_pass = passes / (passes + failures + errors) * 100
             percent_fail = 100 - percent_pass
         else:
-            percent_pass = float('nan')
-            percent_fail = float('nan')
+            percent_pass = 100
+            percent_fail = 0
 
         reports.append({
             'build_number': report.build_number,
@@ -349,8 +349,8 @@ def classname(request, owner, repo, classname):
             percent_pass = passes / (passes + failures + errors) * 100
             percent_fail = 100 - percent_pass
         else:
-            percent_pass = float('nan')
-            percent_fail = float('nan')
+            percent_pass = 100
+            percent_fail = 0
 
         reports.append({
             'repository_branch': report['test_suite__report__repository_branch'],
@@ -546,8 +546,8 @@ def build(request, owner, repo, build):
             percent_pass = passes / (passes + failures + errors) * 100
             percent_fail = 100 - percent_pass
         else:
-            percent_pass = float('nan')
-            percent_fail = float('nan')
+            percent_pass = 100
+            percent_fail = 0
 
         reports.append({
             'build_number': build,
@@ -581,14 +581,14 @@ def build(request, owner, repo, build):
         passes = temp.filter(result='pass').count()
         skips = temp.filter(result='skipped').count()
         failures = temp.filter(result='failure').count()
-        errors = temp.filter(result='error').count()
+        errors = temp.filter(result='error').count()        
 
         if passes + failures + errors > 0:
             percent_pass = passes / (passes + failures + errors) * 100
             percent_fail = 100 - percent_pass
         else:
-            percent_pass = float('nan')
-            percent_fail = float('nan')
+            percent_pass = 100
+            percent_fail = 0
 
         cases.append({
             'classname': case['classname'],
