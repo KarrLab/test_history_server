@@ -237,6 +237,17 @@ def repo(request, owner, repo):
             }
         )
 
+def branch(request, owner, repo, branch):
+    return render_template(request, 'branch.html',
+        context={
+            'repo': repo,
+            'statistics': statistics,
+            'trends': trends,
+            'reports': reports,
+            'modules': modules_html,
+            }
+        )
+
 def classname(request, owner, repo, classname):
     ''' Returns HTML for test class page which displays a list of builds/reports
     which includes the test class and the test cases within the class.
@@ -678,10 +689,35 @@ def sitemap(request):
     Returns:
         :obj:`django.http.HttpResponse`: HTTP response with XML site map
     '''
+    
+    owners = []
+    for owner in Repository.objects\
+        .order_by('owner')\
+        .values('owner'):
+        
+        owner_dict = {'name': owner['owner'], 'repositories': []}
+        owners.append(owner_dict)
+        
+        for repo in Repository.objects.filter(owner=owner['owner']):
+            repo_dict = {'name': repo.name, 'branches': set(), 'builds': {}, 'classnames': {}}
+            owner_dict['repositories'].append(repo_dict)
+                        
+            for report in repo.reports.all():
+                repo_dict['branches'].add(report.repository_branch)
+
+                if report.build_number not in repo_dict['builds']:
+                    repo_dict['builds'][report.build_number] = set()
+                repo_dict['builds'][report.build_number].add(report.name)
+
+            for case in TestCase.objects.filter(test_suite__report__repository=repo):
+                if case.classname not in repo_dict['classnames']:
+                    repo_dict['classnames'][case.classname] = set()
+                repo_dict['classnames'][case.classname].add(case.name)
+    
     return render_template(request, 'sitemap.xml',
         context={
-            'BASE_URL': BASE_URL.ROOT_URL,
-            'repositories': Repository.objects.all(),
+            'BASE_URL': settings.BASE_URL,
+            'owners': owners,
             },
         content_type='application/xml')
 

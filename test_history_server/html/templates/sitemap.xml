@@ -1,10 +1,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- index -->
-    <url><loc>{{ ROOT_URL }}{% url index %}</loc></url>
+    <url><loc>{{BASE_URL}}{% url 'index' %}</loc></url>
 
-    <!-- research -->
-    {% load static %}
-    {% for repo in repositories %}
-    <url><loc>{% get_static_prefix %}/repo/{{ repo.owner }}/{{ repo.name }}/html/index.html</loc></url>
+    {% for owner in owners %}
+    <url><loc>{{BASE_URL}}{% url 'owner' owner=owner.name %}</loc></url>
+        {% for repo in owner.repositories %}
+        <url><loc>{{BASE_URL}}{% url 'repo' owner=owner.name repo=repo.name %}</loc></url>
+            
+            {% for branch in repo.branches %}
+            <url><loc>{{BASE_URL}}{% url 'branch' owner=owner.name repo=repo.name branch=branch %}</loc></url>
+            {% endfor %}
+
+            {% for build, reports in repo.builds.items %}
+            <url><loc>{{BASE_URL}}{% url 'build' owner=owner.name repo=repo.name build=build %}</loc></url>
+                {% for report in reports %}
+                <url><loc>{{BASE_URL}}{% url 'report' owner=owner.name repo=repo.name build=build report=report %}</loc></url>
+                {% endfor %}
+            {% endfor %}
+            
+            {% for classname, cases in repo.classnames.items %}
+            <url><loc>{{BASE_URL}}{% url 'classname' owner=owner.name repo=repo.name classname=classname|default:'__None__' %}</loc></url>
+                {% for case in cases %}                
+                <url><loc>{{BASE_URL}}{% url 'case' owner=owner.name repo=repo.name classname=classname|default:'__None__' case=case %}</loc></url>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
     {% endfor %}
 </urlset>
