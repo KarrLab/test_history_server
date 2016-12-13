@@ -23,7 +23,7 @@
   <li>Test cases: {{statistics.cases}}</li>
   <li>Last tested: #{{statistics.last_report_build}} ({{statistics.last_report_date|date:"Y-m-d H:i:s"}})</li>
   <li>Most recent pass: {% if not statistics.last_pass_build is None %}#{{statistics.last_pass_build}} ({{statistics.last_pass_date|date:"Y-m-d H:i:s"}}){% else %}N/A{% endif %}</li>
-  <li>Most recent failure: {% if not statistics.last_failure_build is None %}#{{statistics.last_failure_build}} ({{statistics.last_failure_date|date:"Y-m-d H:i:s"}}){% else %}N/A{% endif %}</li>
+  <li>Most recent failure: {% if not statistics.last_fail_build is None %}#{{statistics.last_fail_build}} ({{statistics.last_fail_date|date:"Y-m-d H:i:s"}}){% else %}N/A{% endif %}</li>
 </ul>
 
 <h4>Trends</h4>
