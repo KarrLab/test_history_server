@@ -87,7 +87,7 @@
       <td><i class="fi-plus" onclick="javascript: toggleCase('case_{{forloop.counter}}')"></i></td>
       <td><a href="{% url 'build' owner=repo.owner repo=repo.name build=report.build_number %}">{{report.build_number}}</a></td>
       <td><a href="{% url 'report' owner=repo.owner repo=repo.name build=report.build_number report=report.name %}">{{report.name}}</a></td>
-      <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_branch}}">{{report.repository_branch}}</a></td>
+      <td><a href="{% url 'branch' owner=repo.owner repo=repo.name branch=report.repository_branch %}">{{report.repository_branch}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{report.repository_revision}}">{{report.repository_revision|truncatechars:7}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_revision}}/{{case.file}}#L{{case.line|add:1}}">{{case.file}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_revision}}/{{case.file}}#L{{case.line|add:1}}">{{case.line|add:1}}</a></td>

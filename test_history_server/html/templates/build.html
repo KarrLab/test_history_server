@@ -12,7 +12,7 @@
 {% block content %}
 <h4>Info</h4>
 <ul>
-  <li>Branch: <a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{reports.0.repository_branch}}">{{reports.0.repository_branch}}</a></li>
+  <li>Branch: <a href="{% url 'branch' owner=repo.owner repo=repo.name branch=reports.0.repository_branch %}">{{reports.0.repository_branch}}</a></li>
   <li>Revision: <a href="https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{reports.0.repository_revision}}">{{reports.0.repository_revision}}</a></li>
   <li>Build: <a href="https://circleci.com/gh/{{repo.owner}}/{{repo.name}}/{{reports.0.build_number}}">{{reports.0.build_number}}</a></li>
   <li>Date: {{reports.0.date|date:"Y-m-d H:i:s"}}</li>
@@ -48,7 +48,7 @@
     <tr>
       <td><a href="{% url 'build' owner=repo.owner repo=repo.name build=report.build_number %}">{{report.build_number}}</a></td>
       <td><a href="{% url 'report' owner=repo.owner repo=repo.name build=report.build_number report=report.name %}">{{report.name}}</a></td>
-      <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_branch}}">{{report.repository_branch}}</a></td>
+      <td><a href="{% url 'branch' owner=repo.owner repo=repo.name branch=report.repository_branch %}">{{report.repository_branch}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{report.repository_revision}}">{{report.repository_revision|truncatechars:7}}</a></td>
       <td>{{report.date|date:"Y-m-d H:i:s"}}</td>
       <td>{{report.tests}}</td>

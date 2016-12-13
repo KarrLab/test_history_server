@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block head_title %}{{ block.super }} :: {{repo.owner}} / {{repo.name}} / {{branch}} {% endblock %}
+{% block page_title %}
+<a href="{% url 'owner' owner=repo.owner %}">{{repo.owner}}</a>
+ / <a href="{% url 'repo' owner=repo.owner repo=repo.name %}">{{repo.name}}</a>
+ / <a href="{% url 'branch' owner=repo.owner repo=repo.name branch=branch %}">{{branch}}</a>
+{% endblock %}
+
+{% block content %}
+<h4>Info</h4>
+<ul>
+  <li>Version control system: GitHub</li>
+  <li>Web page: <a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{branch}}">https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{branch}}</a></li>
+</ul>
+
+<h4>Statistics</h4>
+<ul>
+  <li>Builds: {{statistics.builds}}</li>
+  <li>Reports: {{statistics.reports}}</li>
+  <li>Test classes: {{statistics.classes}}</li>
+  <li>Test cases: {{statistics.cases}}</li>
+  <li>Last tested: #{{statistics.last_report_build}} ({{statistics.last_report_date|date:"Y-m-d H:i:s"}})</li>
+  <li>Most recent pass: {% if not statistics.last_pass_build is None %}#{{statistics.last_pass_build}} ({{statistics.last_pass_date|date:"Y-m-d H:i:s"}}){% else %}N/A{% endif %}</li>
+  <li>Most recent failure: {% if not statistics.last_fail_build is None %}#{{statistics.last_fail_build}} ({{statistics.last_fail_date|date:"Y-m-d H:i:s"}}){% else %}N/A{% endif %}</li>
+</ul>
+
+<h4>Trends</h4>
+<ul class="small-block-grid-2">
+    <li><div id="pass_rate" class="figure"></div></li>
+    <li><div id="time" class="figure"></div></li>
+    <li><div id="classes" class="figure"></div></li>
+    <li><div id="cases" class="figure"></div></li>
+</ul>
+
+<script type="text/javascript">
+	$(function() {
+    //pass rate
+		var pass_rates = [];
+    {% for pass_rate in trends.pass_rate %}
+    pass_rates.push([{{ forloop.counter0 }}, {{ pass_rate }}]);
+    {% endfor %}
+		$.plot("#pass_rate", [pass_rates], {
+      axisLabels: {
+        show: true,
+      },
+      xaxes: [{
+        axisLabel: 'Report',
+      }],
+      yaxes: [{
+        axisLabel: 'Pass rate (%)',
+      }],
+      xaxis: {
+        min: 0,
+        max: {{trends.pass_rate|length|add:-1}},
+        ticks: [],
+      },
+      yaxis: {
+        min: 0,
+        max: 100,
+      },
+    });
+
+    //time
+    var times = [];
+    {% for time in trends.time %}
+    times.push([{{ forloop.counter0 }}, {{ time }}]);
+    {% endfor %}
+		$.plot("#time", [times], {
+      axisLabels: {
+        show: true,
+      },
+      xaxes: [{
+        axisLabel: 'Report',
+      }],
+      yaxes: [{
+        axisLabel: 'Time (s)',
+      }],
+      xaxis: {
+        min: 0,
+        max: {{trends.time|length|add:-1}},
+        ticks: [],
+      },
+      yaxis: {
+        min: 0,
+      },
+    });
+
+    //clases
+    var classes = [];
+    {% for classes in trends.classes %}
+    classes.push([{{ forloop.counter0 }}, {{ classes }}]);
+    {% endfor %}
+		$.plot("#classes", [classes], {
+      axisLabels: {
+        show: true,
+      },
+      xaxes: [{
+        axisLabel: 'Report',
+      }],
+      yaxes: [{
+        axisLabel: 'Test classes',
+      }],
+      xaxis: {
+        min: 0,
+        max: {{trends.classes|length|add:-1}},
+        ticks: [],
+      },
+      yaxis: {
+        min: 0,
+      },
+    });
+
+    //cases
+    var cases = [];
+    {% for cases in trends.cases %}
+    cases.push([{{ forloop.counter0 }}, {{ cases }}]);
+    {% endfor %}
+		$.plot("#cases", [cases], {
+      axisLabels: {
+        show: true,
+      },
+      xaxes: [{
+        axisLabel: 'Report',
+      }],
+      yaxes: [{
+        axisLabel: 'Test cases',
+      }],
+      xaxis: {
+        min: 0,
+        max: {{trends.cases|length|add:-1}},
+        ticks: [],
+      },
+      yaxis: {
+        min: 0,
+      },
+    });
+	});
+</script>
+
+<h4>Reports</h4>
+<table cellpadding=0 cellspacing=0>
+  <thead>
+    <th>Build</th>
+    <th>Report</th>
+    <th>Revision</th>
+    <th>Date</th>
+    <th>Tests</th>
+    <th>Passes</th>
+    <th>Skips</th>
+    <th>Failures</th>
+    <th>Errors</th>
+    <th>Time (s)</th>
+    <th colspan="2">% Pass</th>
+  </thead>
+  <tbody>
+  {% for report in reports %}
+    <tr>
+      <td><a href="{% url 'build' owner=repo.owner repo=repo.name build=report.build_number %}">{{report.build_number}}</a></td>
+      <td><a href="{% url 'report' owner=repo.owner repo=repo.name build=report.build_number report=report.name %}">{{report.name}}</a></td>
+      <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{report.repository_revision}}">{{report.repository_revision|truncatechars:7}}</a></td>
+      <td>{{report.date|date:"Y-m-d H:i:s"}}</td>
+      <td>{{report.tests}}</td>
+      <td>{{report.passes}}</td>
+      <td>{{report.skips}}</td>
+      <td>{{report.failures}}</td>
+      <td>{{report.errors}}</td>
+      <td>{{report.time|floatformat:3}}</td>
+      <td>
+        <table class="percent_bar" cellpadding=0 cellspacing=0>
+          <tr>
+            <td class="pass" style="width:{{report.percent_pass}}%"></td>
+            <td class="fail" style="width:{{report.percent_fail}}%"></td>
+          </tr>
+        </table>
+      </td>
+      <td>{{report.percent_pass|floatformat:1}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h4>Test classes</h4>
+<table cellpadding=0 cellspacing=0>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th>File</th>
+      <th>Tests</th>
+      <th>Builds</th>
+      <th>Reports</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for module in modules %}
+    <tr>
+      <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=module.classname|default:'__None__' %}">{{module.classname|default:'--None--'}}</a></td>
+      <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{module.repository_revision}}/{{module.file}}">{{module.file}}</a></td>
+      <td>{{module.cases}}</td>
+      <td>{{module.builds}}</td>
+      <td>{{module.reports}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

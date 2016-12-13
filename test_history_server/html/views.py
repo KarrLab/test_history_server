@@ -238,9 +238,135 @@ def repo(request, owner, repo):
         )
 
 def branch(request, owner, repo, branch):
+    repo = Repository.objects.get(owner=owner, name=repo)
+
+    #statistics
+    report_objs = repo.reports.filter(repository_branch=branch)
+    last_report = report_objs.order_by('-build_number')[0]
+
+    passes = report_objs.exclude(Q(test_suite__test_cases__result='failure') | Q(test_suite__test_cases__result='error')).order_by('-build_number')
+    if passes.count() > 0:
+        last_pass = passes[0]
+        last_pass_build = last_pass.build_number
+        last_pass_date = last_pass.date
+    else:
+        last_pass_build = None
+        last_pass_date = None
+
+    fails = report_objs.filter(Q(test_suite__test_cases__result='failure') | Q(test_suite__test_cases__result='error')).order_by('-build_number')
+    if fails.count() > 0:
+        last_fail = fails[0]
+        last_fail_build = last_fail.build_number
+        last_fail_date = last_fail.date
+    else:
+        last_fail_build = None
+        last_fail_date = None
+
+    statistics = {
+        'builds': report_objs.aggregate(builds=Count('build_number', distinct=True))['builds'],
+        'reports': report_objs.count(),
+        'classes': report_objs.values('test_suite__test_cases__classname').distinct().count(),
+        'cases': report_objs.values('test_suite__test_cases__classname', 'test_suite__test_cases__name').distinct().count(),
+        'last_report_build': last_report.build_number,
+        'last_report_date': last_report.date,
+        'last_pass_build': last_pass_build,
+        'last_pass_date': last_pass_date,
+        'last_fail_build': last_fail_build,
+        'last_fail_date': last_fail_date,
+        }
+
+    #trends
+    reports = report_objs\
+        .order_by('build_number', '-name')\
+        .annotate(
+            time=Sum('test_suite__test_cases__time'),
+            classes=Count('test_suite__test_cases__classname', distinct=True),
+            cases=Count('test_suite__test_cases'),
+            )
+
+    trends = {
+        'report': [],
+        'pass_rate': [],
+        'time': [],
+        'classes': [],
+        'cases': [],
+    }
+    for report in reports:
+        passes = report.test_suite.test_cases.filter(result='pass').count()
+        failures = report.test_suite.test_cases.filter(result='failure').count()
+        errors = report.test_suite.test_cases.filter(result='error').count()
+
+        if passes + failures + errors > 0:
+            pass_rate = passes / (passes + failures + errors) * 100.
+        else:
+            pass_rate = float('nan')
+
+        trends['report'].append({'build_number': report.build_number, 'name': report.name})
+        trends['pass_rate'].append(pass_rate)
+        trends['time'].append(report.time)
+        trends['classes'].append(report.classes)
+        trends['cases'].append(report.cases)
+
+    # reports
+    reports = []
+    for report in report_objs.order_by('-build_number', 'name').annotate(time=Sum('test_suite__test_cases__time')):
+        suite = report.test_suite
+
+        tests = suite.test_cases.count()
+        passes = suite.test_cases.filter(result='pass').count()
+        skips = suite.test_cases.filter(result='skipped').count()
+        failures = suite.test_cases.filter(result='failure').count()
+        errors = suite.test_cases.filter(result='error').count()
+        time = report.time
+
+        if passes + failures + errors > 0:
+            percent_pass = passes / (passes + failures + errors) * 100
+            percent_fail = 100 - percent_pass
+        else:
+            percent_pass = 100
+            percent_fail = 0
+
+        reports.append({
+            'build_number': report.build_number,
+            'repository_branch': report.repository_branch,
+            'repository_revision': report.repository_revision,
+            'date': report.date,
+            'name': report.name,
+            'tests': tests,
+            'passes': passes,
+            'skips': skips,
+            'failures': failures,
+            'errors': errors,
+            'time': time,
+            'percent_pass': percent_pass,
+            'percent_fail': percent_fail,
+        })
+
+    # modules
+    cases = TestCase.objects.filter(test_suite__report__repository=repo).order_by('classname')
+    modules = cases.values('classname').annotate(
+        cases=Count('name', distinct=True),
+        builds=Count('test_suite__report__build_number', distinct=True),
+        reports=Count('test_suite__report', distinct=True),
+        )
+    modules_html = []
+    for module in modules:
+        last_case = TestCase.objects.filter(test_suite__report__repository=repo, classname=module['classname'])\
+            .order_by('-test_suite__report__build_number', 'test_suite__report__name')[0]
+
+        modules_html.append({
+            'classname': module['classname'],
+            'repository_revision': last_case.test_suite.report.repository_revision,
+            'file': last_case.file,
+            'cases': module['cases'],
+            'builds': module['builds'],
+            'reports': module['reports'],
+        })
+
     return render_template(request, 'branch.html',
         context={
             'repo': repo,
+            'branch': branch,
             'statistics': statistics,
             'trends': trends,
             'reports': reports,

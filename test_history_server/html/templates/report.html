@@ -13,7 +13,7 @@
 {% block content %}
 <h4>Info</h4>
 <ul>
-  <li>Branch: <a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_branch}}">{{report.repository_branch}}</a></li>
+  <li>Branch: <a href="{% url 'branch' owner=repo.owner repo=repo.name branch=report.repository_branch %}">{{report.repository_branch}}</a></li>
   <li>Revision: <a href="https://github.com/{{repo.owner}}/{{repo.name}}/commit/{{report.repository_revision}}">{{report.repository_revision}}</a></li>
   <li>Build: <a href="https://circleci.com/gh/{{repo.owner}}/{{repo.name}}/{{report.build_number}}">{{report.build_number}}</a></li>
   <li>Date: {{report.date|date:"Y-m-d H:i:s"}}</li>
