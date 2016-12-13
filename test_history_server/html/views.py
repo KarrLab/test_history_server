@@ -178,7 +178,7 @@ def repo(request, owner, repo):
 
         tests = suite.test_cases.count()
         passes = suite.test_cases.filter(result='pass').count()
-        skips = suite.test_cases.filter(result='skip').count()
+        skips = suite.test_cases.filter(result='skipped').count()
         failures = suite.test_cases.filter(result='failure').count()
         errors = suite.test_cases.filter(result='error').count()
         time = report.time
@@ -341,7 +341,7 @@ def classname(request, owner, repo, classname):
                 test_suite=report['test_suite'],
                 classname=classname)
         passes = cases.filter(result='pass').count()
-        skips = cases.filter(result='skip').count()
+        skips = cases.filter(result='skipped').count()
         failures = cases.filter(result='failure').count()
         errors = cases.filter(result='error').count()
 
@@ -537,7 +537,7 @@ def build(request, owner, repo, build):
 
         tests = suite.test_cases.count()
         passes = suite.test_cases.filter(result='pass').count()
-        skips = suite.test_cases.filter(result='skip').count()
+        skips = suite.test_cases.filter(result='skipped').count()
         failures = suite.test_cases.filter(result='failure').count()
         errors = suite.test_cases.filter(result='error').count()
         time = report.time
@@ -579,7 +579,7 @@ def build(request, owner, repo, build):
                 name=case['name'])
         tests = temp.count()
         passes = temp.filter(result='pass').count()
-        skips = temp.filter(result='skip').count()
+        skips = temp.filter(result='skipped').count()
         failures = temp.filter(result='failure').count()
         errors = temp.filter(result='error').count()
 
