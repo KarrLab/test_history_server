@@ -1,23 +1,16 @@
-.. Test History Server documentation master file, created by
-   sphinx-quickstart on Tue Aug  2 09:29:29 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+`test_history_server` documentation
+===================================
 
-Welcome to Test History Server's documentation!
-====================================================
+Unit test history report server
 
-Contents:
+Contents
+--------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
-   source/test_history_server.rst
-   source/modules.rst
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   installation.rst
+   usage.rst
+   rest_api.rst
+   Python API documentation <source/modules.rst>
+   about.rst
