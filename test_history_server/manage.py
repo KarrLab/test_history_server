@@ -1,3 +1,5 @@
+#!/home/minicell/opt/python-3.6.3/bin/python3
+
 """
 Django manager
 
@@ -7,7 +9,6 @@ Django manager
 :License: MIT
 """
 
-#!/usr/bin/env python
 import os
 import sys
 
