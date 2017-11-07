@@ -1,6 +1,6 @@
 cement
 configparser
-Django==1.10.2
+Django
 MySQL-python; python_version < '3.0'
 mysqlclient; python_version >= '3.0'
 robpol86-sphinxcontrib-googleanalytics
