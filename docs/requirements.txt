@@ -5,7 +5,7 @@ MySQL-python; python_version < '3.0'
 mysqlclient; python_version >= '3.0'
 robpol86-sphinxcontrib-googleanalytics
 six
-Sphinx
+Sphinx >= 1.6
 sphinx_rtd_theme
 sphinxcontrib-bibtex
 sphinxcontrib-spelling; python_version >= '3.0'
