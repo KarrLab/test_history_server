@@ -5,7 +5,6 @@
 :License: MIT
 """
 
-from collections import OrderedDict
 from datetime import datetime
 from django.db.models import Avg, Count, Max, Sum, Q
 from django.http import HttpResponse
