@@ -2,6 +2,7 @@ cement
 configparser
 Django
 mysqlclient
+pbr # needed by sphinxcontrib-spelling and must be installed first for Python 2
 robpol86-sphinxcontrib-googleanalytics
 six
 Sphinx >= 1.6
