@@ -27,3 +27,6 @@ tmp/
 
 # data dumps
 test_history_server/dump/
+
+# egg info
+test_history_server.egg-info/

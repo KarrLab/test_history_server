@@ -8,9 +8,19 @@ Installation script
 """
 
 from setuptools import setup, find_packages
-import test_history_server
 import os
 import re
+
+# get long description
+if os.path.isfile('README.rst'):
+    with open('README.rst', 'r') as file:
+        long_description = file.read()
+else:
+    long_description = ''
+
+# get version
+with open('test_history_server/VERSION', 'r') as file:
+    version = file.read().strip()
 
 # parse dependencies and their links from requirements.txt files
 install_requires = []
@@ -29,15 +39,21 @@ for line in open('requirements.txt'):
 # install package
 setup(
     name="test_history_server",
-    version=test_history_server.__version__,
+    version=version,
     description="Unit test history server",
+    long_description=long_description,
     url="http://tests.karrlab.org",
-    download_url='https://github.com/KarrLab/test_history_server/tarball/{}'.format(test_history_server.__version__),
+    download_url='https://github.com/KarrLab/test_history_server',
     author="Jonathan Karr",
     author_email="jonrkarr@gmail.com",
     license="MIT",
     keywords='xunit junit unit test history',
     packages=find_packages(exclude=['tests', 'tests.*']),
+    package_data={
+        'test_history_server': [
+            'VERSION',
+        ],
+    },
     install_requires=install_requires,
     dependency_links=dependency_links,
     classifiers=[

@@ -1,3 +1,9 @@
+# description
+include README.rst
+
+# version
+include test_history_server/VERSION
+
 # license
 include LICENSE
 
