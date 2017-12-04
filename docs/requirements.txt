@@ -1,6 +1,6 @@
 cement
 configparser
-django
+django < 2.0
 mysqlclient
 robpol86_sphinxcontrib_googleanalytics
 six
