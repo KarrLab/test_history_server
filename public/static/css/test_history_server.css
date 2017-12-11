@@ -60,6 +60,7 @@ table.details{
     margin: 0px;
     padding: 0px;
     width: 100%;
+    max-width: 100%;
     border: none;
 }
 table.details,
@@ -77,6 +78,8 @@ table.details tbody tr th{
 }
 table.details tbody tr td{
     width: 100%;
+    max-width: 837px;
+    overflow: scroll;
 }
 table.details tbody tr th,
 table.details tbody tr td{
