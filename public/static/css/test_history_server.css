@@ -1,6 +1,7 @@
-.alert {
+.alert, .alert td, .alert td a {
     color:red
 }
+
 .percent_bar{
   width: 150px;
   border:1px solid #222;

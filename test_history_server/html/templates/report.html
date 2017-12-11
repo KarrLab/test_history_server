@@ -56,13 +56,13 @@
   <tbody>
     {% for case in cases %}
       {% with report=case.test_suite.report %}
-    <tr>
+    <tr {% if case.result == 'error' or case.result == 'failure' %} class="alert"{% endif %}>
       <td><i class="fi-plus" onclick="javascript: toggleCase('case_{{forloop.counter}}')"></i></td>
-      <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=case.classname|default:'__None__' %}">{{case.classname|default:'--None--'}}</a></td>
-      <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=case.classname|default:'__None__' case=case.name %}">{{case.name}}</a></td>
-      <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_revision}}/{{case.file}}#L{{case.line}}">{{case.file}}</a></td>
+      <td><a href="{% url 'classname' owner=repo.owner repo=repo.name classname=case.classname|default:'__None__' %}">{{case.classname|truncatechars:50|default:'--None--'}}</a></td>
+      <td><a href="{% url 'case' owner=repo.owner repo=repo.name classname=case.classname|default:'__None__' case=case.name %}">{{case.name|truncatechars:30}}</a></td>
+      <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_revision}}/{{case.file}}#L{{case.line}}">{{case.file|truncatechars:30}}</a></td>
       <td><a href="https://github.com/{{repo.owner}}/{{repo.name}}/tree/{{report.repository_revision}}/{{case.file}}#L{{case.line|add:1}}">{{case.line|add:1}}</a></td>
-      <td><span {% if case.result == 'error' or case.result == 'failure' %} class="alert"{% endif %}>{{case.result|capfirst}}</span></td>
+      <td>{{case.result|capfirst}}</td>
       <td>{{case.time|floatformat:3}}</td>
     </tr>
     <tr>

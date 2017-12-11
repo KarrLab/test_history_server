@@ -34,11 +34,11 @@
   </thead>
   <tbody>
   {% for repo in repositories %}
-    <tr>
+    <tr {% if not repo.status_is_pass %} class="alert"{% endif %}>
       <td>{{ repo.name }}</td>
       <td><a href="https://github.com/{{ repo.owner }}/{{ repo.name }}">Repository</a></td>
       <td><a href="{% url 'repo' owner=repo.owner repo=repo.name %}">Builds and test cases</a></td>
-      <td><a href="{% url 'report' owner=repo.owner repo=repo.name build=repo.build_number report=repo.report_name %}"{% if not repo.status_is_pass %} class="alert"{% endif %}>{% if repo.status_is_pass %}Pass{% else %}Failure{% endif %}</a></td>
+      <td><a href="{% url 'report' owner=repo.owner repo=repo.name build=repo.build_number report=repo.report_name %}">{% if repo.status_is_pass %}Pass{% else %}Failure{% endif %}</a></td>
       <td>{{ repo.report_date|date:"Y-m-d H:i:s" }}</td>
     </tr>
   {% endfor %}

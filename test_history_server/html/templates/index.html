@@ -29,7 +29,7 @@
   {% for owner in owners %}
     <tr>
       <td>{{ owner.owner }}</td>
-      <td><a href="{https://github.com/{{ owner.owner }}">GitHub</a></td>
+      <td><a href="https://github.com/{{ owner.owner }}">GitHub</a></td>
       <td><a href="{% url 'owner' owner=owner.owner %}">{{owner.repositories}}</a></td>
     </tr>
   {% endfor %}
