@@ -30,3 +30,6 @@ test_history_server/dump/
 
 # egg info
 test_history_server.egg-info/
+
+# pytest cache
+.pytest_cache/
