@@ -1,7 +1,5 @@
-cement
-configparser
-django < 2.0
-mysqlclient
+mock
+pip_check_reqs
 robpol86_sphinxcontrib_googleanalytics
 six
 sphinx >= 1.7
