@@ -16,11 +16,9 @@ class BaseController(CementBaseController):
     class Meta:
         label = 'base'
         description = "Test history server command line interface"
-
-    @expose(help='Get version')
-    def get_version(self):
-        """ Get version """
-        print(test_history_server.__version__)
+        arguments = [
+            (['-v', '--version'], dict(action='version', version=test_history_server.__version__)),
+        ]
 
 
 class RenameRepoController(CementBaseController):
@@ -116,6 +114,7 @@ class App(CementApp):
 def main():
     with App() as app:
         app.run()
+
 
 if __name__ == '__main__':
     main()
