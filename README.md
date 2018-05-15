@@ -1,7 +1,7 @@
 [//]: # ( [![PyPI package](https://img.shields.io/pypi/v/test_history_server.svg)](https://pypi.python.org/pypi/test_history_server) )
 [//]: # ( [![Test results](https://circleci.com/gh/KarrLab/test_history_server.svg?style=shield)](https://circleci.com/gh/KarrLab/test_history_server) )
 [//]: # ( [![Test coverage](https://coveralls.io/repos/github/KarrLab/test_history_server/badge.svg)](https://coveralls.io/github/KarrLab/test_history_server) )
-[![Documentation](https://img.shields.io/badge/docs-latest-green.svg)](http://docs.karrlab.org/test_history_server)
+[![Documentation](https://readthedocs.org/projects/test-history-server/badge/?version=latest)](http://docs.karrlab.org/test_history_server)
 [![Code analysis](https://api.codeclimate.com/v1/badges/4123f20b28d181e733de/maintainability)](https://codeclimate.com/github/KarrLab/test_history_server)
 [![License](https://img.shields.io/github/license/KarrLab/test_history_server.svg)](LICENSE)
 
