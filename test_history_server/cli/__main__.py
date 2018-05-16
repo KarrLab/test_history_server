@@ -20,6 +20,10 @@ class BaseController(CementBaseController):
             (['-v', '--version'], dict(action='version', version=test_history_server.__version__)),
         ]
 
+    @expose(hide=True)
+    def default(self):
+        self.app.args.print_help()
+
 
 class RenameRepoController(CementBaseController):
     class Meta:
