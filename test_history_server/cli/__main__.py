@@ -1,5 +1,4 @@
-from cement.core.foundation import CementApp
-from cement.core.controller import CementBaseController, expose
+import cement
 import django
 import os
 
@@ -10,7 +9,7 @@ from test_history_server.core import models
 import test_history_server
 
 
-class BaseController(CementBaseController):
+class BaseController(cement.Controller):
     """ Base controller for command line application """
 
     class Meta:
@@ -20,12 +19,12 @@ class BaseController(CementBaseController):
             (['-v', '--version'], dict(action='version', version=test_history_server.__version__)),
         ]
 
-    @expose(hide=True)
-    def default(self):
+    @cement.ex(hide=True)
+    def _default(self):
         self.app.args.print_help()
 
 
-class RenameRepoController(CementBaseController):
+class RenameRepoController(cement.Controller):
     class Meta:
         label = 'rename-repository'
         description = 'Rename repository from old_name to new_name'
@@ -36,15 +35,15 @@ class RenameRepoController(CementBaseController):
             (['new_name'], dict(type=str, help='New repository name')),
         ]
 
-    @expose(hide=True)
-    def default(self):
+    @cement.ex(hide=True)
+    def _default(self):
         args = self.app.pargs
         repo = models.Repository.objects.get(name=args.old_name)
         repo.name = args.new_name
         repo.save()
 
 
-class AddRepoAliasController(CementBaseController):
+class AddRepoAliasController(cement.Controller):
     class Meta:
         label = 'add-repository-alias'
         description = 'Add alias to repository'
@@ -55,15 +54,15 @@ class AddRepoAliasController(CementBaseController):
             (['alias'], dict(type=str, help='Repository alias')),
         ]
 
-    @expose(hide=True)
-    def default(self):
+    @cement.ex(hide=True)
+    def _default(self):
         args = self.app.pargs
         repo = models.Repository.objects.get(name=args.name)
         alias = repo.aliases.create(name=args.alias)
         alias.save()
 
 
-class MergeRepoReportsController(CementBaseController):
+class MergeRepoReportsController(cement.Controller):
     class Meta:
         label = 'merge-repository-reports'
         description = 'Merge reports from repository src to dst'
@@ -74,8 +73,8 @@ class MergeRepoReportsController(CementBaseController):
             (['dst'], dict(type=str, help='Repository alias')),
         ]
 
-    @expose(hide=True)
-    def default(self):
+    @cement.ex(hide=True)
+    def _default(self):
         args = self.app.pargs
         src_repo = models.Repository.objects.get(name=args.src)
         dst_repo = models.Repository.objects.get(name=args.dst)
@@ -84,7 +83,7 @@ class MergeRepoReportsController(CementBaseController):
             report.save()
 
 
-class DeleteRepoController(CementBaseController):
+class DeleteRepoController(cement.Controller):
     class Meta:
         label = 'delete-repository'
         description = 'Delete repository'
@@ -94,14 +93,14 @@ class DeleteRepoController(CementBaseController):
             (['name'], dict(type=str, help='Repository name')),
         ]
 
-    @expose(hide=True)
-    def default(self):
+    @cement.ex(hide=True)
+    def _default(self):
         args = self.app.pargs
         repo = models.Repository.objects.get(name=args.name)
         repo.delete()
 
 
-class App(CementApp):
+class App(cement.App):
     """ Command line application """
     class Meta:
         label = 'test-history-server-cli'
