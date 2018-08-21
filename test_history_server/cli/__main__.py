@@ -21,7 +21,7 @@ class BaseController(cement.Controller):
 
     @cement.ex(hide=True)
     def _default(self):
-        self.app.args.print_help()
+        self._parser.print_help()
 
 
 class RenameRepoController(cement.Controller):
