@@ -34,11 +34,6 @@ def index(request):
     repos = Repository.objects.all()
     statistics = {
         'repositories': repos.count(),
-        'builds': repos.aggregate(builds=Count('reports__build_number', distinct=True))['builds'],
-        'reports': repos.aggregate(reports=Count('reports'))['reports'],
-        'classes': repos.values('name', 'reports__test_suite__test_cases__classname').distinct().count(),
-        'cases': repos.values('name', 'reports__test_suite__test_cases__classname', 'reports__test_suite__test_cases__name').distinct().count(),
-        'last_report': repos.aggregate(date=Max('reports__date'))['date'],
         }
 
     return render_template(request, 'index.html',
@@ -59,13 +54,6 @@ def owner(request, owner):
         :obj:`django.http.HttpResponse`: HTTP response with HTML for home page
     '''
     repos = Repository.objects.filter(owner=owner)
-    statistics = {
-        'builds': repos.aggregate(builds=Count('reports__build_number', distinct=True))['builds'],
-        'reports': repos.aggregate(reports=Count('reports'))['reports'],
-        'classes': repos.values('name', 'reports__test_suite__test_cases__classname').distinct().count(),
-        'cases': repos.values('name', 'reports__test_suite__test_cases__classname', 'reports__test_suite__test_cases__name').distinct().count(),
-        'last_report': repos.aggregate(date=Max('reports__date'))['date'],
-        }
 
     repositories = []
     for repo in Repository.objects.filter(owner=owner):
@@ -84,7 +72,6 @@ def owner(request, owner):
     return render_template(request, 'owner.html',
         context={
             'owner': owner,
-            'statistics': statistics,
             'repositories': repositories
             }
         )

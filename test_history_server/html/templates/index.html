@@ -9,11 +9,6 @@
 <ul>
   <li>Users/organizations: {{owners|length}}</li>
   <li>Repositories: {{statistics.repositories}}</li>
-  <li>Builds: {{statistics.builds}}</li>
-  <li>Reports: {{statistics.reports}}</li>
-  <li>Test classes: {{statistics.classes}}</li>
-  <li>Test cases: {{statistics.cases}}</li>
-  <li>Last tested: {{statistics.last_report|date:"Y-m-d H:i:s"}}</li>
 </ul>
 
 <h4>Users/organizations</h4>
@@ -28,8 +23,8 @@
   <tbody>
   {% for owner in owners %}
     <tr>
-      <td>{{ owner.owner }}</td>
-      <td><a href="https://github.com/{{ owner.owner }}">GitHub</a></td>
+      <td><a href="https://github.com/{{ owner.owner }}">{{ owner.owner }}</a></td>
+      <td><a href="https://github.com/">GitHub</a></td>
       <td><a href="{% url 'owner' owner=owner.owner %}">{{owner.repositories}}</a></td>
     </tr>
   {% endfor %}
