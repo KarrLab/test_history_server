@@ -13,7 +13,7 @@ Install the latest revision from GitHub
 ---------------------------------------
 Run the following command to install the latest version from GitHub::
 
-    pip install git+git://github.com/KarrLab/{{ package }}.git#egg={{ package }}
+    pip install git+https://github.com/KarrLab/test_history_server.git#egg=test_history_server
 
 Configure the package
 ---------------------------------------
