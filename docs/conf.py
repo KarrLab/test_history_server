@@ -122,7 +122,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
 #
-# show_authors = False
+show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -187,7 +187,7 @@ import sphinx_rtd_theme
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -414,5 +414,4 @@ googleanalytics_id = 'UA-86340737-1'
 # -- if RTD, redirect to https://docs.karrlab.org  ------------------------
 
 addmetahtml_content = '<meta http-equiv="refresh" content="0; url=https://docs.karrlab.org/test_history_server" />'
-# addmetahtml_enabled = os.getenv('READTHEDOCS', '') == 'True'
-addmetahtml_enabled = False
+addmetahtml_enabled = os.getenv('READTHEDOCS', '') == 'True'
