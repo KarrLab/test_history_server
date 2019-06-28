@@ -15,6 +15,7 @@ class BaseController(cement.Controller):
     class Meta:
         label = 'base'
         description = "Test history server command line interface"
+        help = "Test history server command line interface"
         arguments = [
             (['-v', '--version'], dict(action='version', version=test_history_server.__version__)),
         ]
@@ -28,6 +29,7 @@ class RenameRepoController(cement.Controller):
     class Meta:
         label = 'rename-repository'
         description = 'Rename repository from old_name to new_name'
+        help = 'Rename repository from old_name to new_name'
         stacked_on = 'base'
         stacked_type = 'nested'
         arguments = [
@@ -47,6 +49,7 @@ class AddRepoAliasController(cement.Controller):
     class Meta:
         label = 'add-repository-alias'
         description = 'Add alias to repository'
+        help = 'Add alias to repository'
         stacked_on = 'base'
         stacked_type = 'nested'
         arguments = [
@@ -66,6 +69,7 @@ class MergeRepoReportsController(cement.Controller):
     class Meta:
         label = 'merge-repository-reports'
         description = 'Merge reports from repository src to dst'
+        help = 'Merge reports from repository src to dst'
         stacked_on = 'base'
         stacked_type = 'nested'
         arguments = [
@@ -87,6 +91,7 @@ class DeleteRepoController(cement.Controller):
     class Meta:
         label = 'delete-repository'
         description = 'Delete repository'
+        help = 'Delete repository'
         stacked_on = 'base'
         stacked_type = 'nested'
         arguments = [
